@@ -4,7 +4,7 @@
  * 
  * 负责与 OpenAI 格式的 API 进行通信
  *
- * @package AI_Comment_Checker
+ * @package SpamJudge
  */
 
 // 如果直接访问此文件，则退出
@@ -94,7 +94,7 @@ class AI_API_Client {
                 'success' => false,
                 'score' => null,
                 'status_code' => null,
-                'error' => __( '评论者名称或评论内容为空', 'ai-comment-checker' ),
+                'error' => __( '评论者名称或评论内容为空', 'spamjudge' ),
             );
         }
         
@@ -126,7 +126,7 @@ class AI_API_Client {
             'headers' => array(
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Bearer ' . $this->api_key,
-                'User-Agent' => 'AI Comment Checker WordPress Plugin', // 自定义 User-Agent 标识
+                'User-Agent' => 'SpamJudge WordPress Plugin', // 自定义 User-Agent 标识
             ),
             'body' => wp_json_encode( $request_body ),
             'timeout' => $this->timeout,
@@ -155,7 +155,7 @@ class AI_API_Client {
                 'status_code' => $status_code,
                 'error' => sprintf(
                     /* translators: 1: HTTP status code, 2: API error body */
-                    __( 'API 返回错误状态码 %1$d: %2$s', 'ai-comment-checker' ),
+                    __( 'API 返回错误状态码 %1$d: %2$s', 'spamjudge' ),
                     $status_code,
                     $error_body
                 ),
@@ -172,7 +172,7 @@ class AI_API_Client {
                 'success' => false,
                 'score' => null,
                 'status_code' => $status_code,
-                'error' => __( 'API 响应格式无效', 'ai-comment-checker' ),
+                'error' => __( 'API 响应格式无效', 'spamjudge' ),
             );
         }
         
@@ -189,7 +189,7 @@ class AI_API_Client {
                 'status_code' => $status_code,
                 'error' => sprintf(
                     /* translators: %s: AI response content */
-                    __( 'AI 返回的内容不是有效分数: %s', 'ai-comment-checker' ),
+                    __( 'AI 返回的内容不是有效分数: %s', 'spamjudge' ),
                     $ai_response
                 ),
             );

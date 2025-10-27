@@ -1,17 +1,17 @@
 /**
- * AI Comment Checker 管理后台样式
+ * SpamJudge 管理后台样式
  *
- * @package AI_Comment_Checker
+ * @package SpamJudge
  */
 
 /* 主容器 */
-.ai-comment-checker-wrap {
+.spamjudge-wrap {
     /* 将顶部外边距从 20px 调整为 10px，使标题与页面上边距更均衡 */
     margin: 10px 20px 0 0;
 }
 
 /* 标签页导航 - 减少与标题的间距 */
-.ai-comment-checker-wrap .nav-tab-wrapper {
+.spamjudge-wrap .nav-tab-wrapper {
     margin-top: 10px;
 }
 
@@ -27,13 +27,17 @@
 }
 
 /* 日志表格 */
-.ai-comment-checker-logs table {
+.spamjudge-logs table {
     margin-top: 20px;
+    table-layout: fixed;
+    width: 100%;
 }
 
 /* 评论者名称列 - 限制宽度并显示省略号 */
 .comment-author-preview {
-    max-width: 150px;
+    /* 占满单元格并在边缘省略 */
+    width: 100%;
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -41,7 +45,9 @@
 
 /* 评论内容列 - 限制宽度并显示省略号 */
 .comment-content-preview {
-    max-width: 300px;
+    /* 占满单元格并在边缘省略 */
+    width: 100%;
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -49,7 +55,9 @@
 
 /* 时间列 - 限制宽度并显示省略号 */
 .comment-time-preview {
-    max-width: 150px;
+    /* 占满单元格并在边缘省略 */
+    width: 100%;
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -58,10 +66,34 @@
 /* 分页 */
 .tablenav {
     margin-top: 20px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.tablenav-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .tablenav-pages {
-    float: right;
+    display: flex;
+    align-items: center;
+}
+
+/* 响应式：窄屏时保持分页在右侧，限定在插件日志区域 */
+@media screen and (max-width: 782px) {
+    .spamjudge-logs .tablenav {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+    }
+    .spamjudge-logs .tablenav .tablenav-pages {
+        margin-left: auto; /* 推到右侧 */
+        float: none;       /* 覆盖核心在窄屏时的float设置 */
+        width: auto;       /* 避免被设为100%导致换行 */
+    }
 }
 
 .tablenav-pages .pagination-links {
@@ -107,6 +139,36 @@
     margin-top: 5px;
     color: #666;
     font-style: italic;
+}
+
+/* 密码输入框与眼睛按钮 */
+.sj-password-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 500px;
+}
+
+.sj-password-wrapper input {
+    padding-right: 40px; /* 为眼睛按钮留出空间 */
+}
+
+/* 眼睛按钮样式 */
+.sj-toggle-password {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    line-height: 1;
+    color: #787c82;
+}
+
+.sj-toggle-password:hover {
+    color: #2271b1;
 }
 
 /* 响应式设计 */

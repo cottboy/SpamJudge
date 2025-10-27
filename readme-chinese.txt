@@ -1,4 +1,4 @@
-=== AI Comment Checker ===
+=== SpamJudge ===
 Contributors: cottboy
 Tags: ai, llm, spam, spam-comments, comment
 Requires at least: 5.0
@@ -12,7 +12,7 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 == Description ==
 
-AI Comment Checker 使用 AI 大模型自动检测和过滤垃圾评论。
+SpamJudge 使用 AI 大模型自动检测和过滤垃圾评论。
 
 = 特征 =
 
@@ -63,7 +63,7 @@ If you output anything other than a single number, the system will fail.
 
 1. 登录 WordPress 管理后台
 2. 进入"插件" > "添加插件"
-3. 搜索 "AI Comment Checker"
+3. 搜索 "SpamJudge"
 4. 点击"立即安装"
 5. 安装完成后点击"启用"
 
@@ -79,10 +79,10 @@ If you output anything other than a single number, the system will fail.
 = FTP 安装 =
 
 1. 解压插件 zip 文件
-2. 通过 FTP 上传 `ai-comment-checker` 文件夹到 `/wp-content/plugins/` 目录
+2. 通过 FTP 上传 `spamjudge` 文件夹到 `/wp-content/plugins/` 目录
 3. 登录 WordPress 管理后台
 4. 进入"插件"页面
-5. 找到 "AI Comment Checker" 并点击"启用"
+5. 找到 "SpamJudge" 并点击"启用"
 
 == Frequently Asked Questions ==
 
@@ -96,7 +96,7 @@ If you output anything other than a single number, the system will fail.
 
 = 提交评论时会额外增加多少等待时间？ =
 
-增加5秒左右，具体根据使用的服务提供商以及模型有关，使用非思考模型可有效降低等待时间。
+增加3秒左右，具体根据使用的服务提供商以及模型有关，使用非思考模型可有效降低等待时间。
 
 = 所有选项都配置好了，依旧请求失败怎么办？ =
 

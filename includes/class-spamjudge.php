@@ -1,10 +1,10 @@
 <?php
 /**
- * AI 评论检查器核心类
+ * SpamJudge 核心类
  * 
  * 负责处理评论提交时的 AI 检查逻辑
  *
- * @package AI_Comment_Checker
+ * @package SpamJudge
  */
 
 // 如果直接访问此文件，则退出
@@ -13,14 +13,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * AI 评论检查器核心类
+ * SpamJudge 核心类
  */
-class AI_Comment_Checker {
+class SpamJudge {
     
     /**
      * 单例实例
      *
-     * @var AI_Comment_Checker
+     * @var SpamJudge
      */
     private static $instance = null;
     
@@ -34,7 +34,7 @@ class AI_Comment_Checker {
     /**
      * 获取单例实例
      *
-     * @return AI_Comment_Checker
+     * @return SpamJudge
      */
     public static function get_instance() {
         if ( self::$instance === null ) {
@@ -61,7 +61,7 @@ class AI_Comment_Checker {
      * 加载设置
      */
     private function load_settings() {
-        $this->settings = get_option( 'ai_comment_checker_settings', array() );
+        $this->settings = get_option( 'spamjudge_settings', array() );
         
         // 确保所有必需的设置都存在
         $defaults = array(
@@ -254,7 +254,7 @@ If you output anything other than a single number, the system will fail.',
      */
     public function mark_spam_after_insert( $comment_id, $comment_approved, $commentdata ) {
         // 获取待处理的检查结果
-        $check_data = get_transient( 'ai_comment_checker_pending_log' );
+        $check_data = get_transient( 'spamjudge_pending_log' );
 
         if ( ! $check_data ) {
             return;
@@ -287,7 +287,7 @@ If you output anything other than a single number, the system will fail.',
      */
     private function log_pending_check( $check_data ) {
         // 将检查结果存储在临时选项中
-        set_transient( 'ai_comment_checker_pending_log', $check_data, 60 );
+        set_transient( 'spamjudge_pending_log', $check_data, 60 );
 
         // 挂钩评论插入后的动作
         add_action( 'comment_post', array( $this, 'log_comment_check' ), 10, 1 );
@@ -300,14 +300,14 @@ If you output anything other than a single number, the system will fail.',
      */
     public function log_comment_check( $comment_id ) {
         // 获取待处理的检查结果
-        $check_data = get_transient( 'ai_comment_checker_pending_log' );
+        $check_data = get_transient( 'spamjudge_pending_log' );
 
         if ( ! $check_data ) {
             return;
         }
 
         // 删除临时数据
-        delete_transient( 'ai_comment_checker_pending_log' );
+        delete_transient( 'spamjudge_pending_log' );
 
         // 记录日志（不记录comment_id）
         $logger = new AI_Comment_Logger();
@@ -359,7 +359,7 @@ If you output anything other than a single number, the system will fail.',
             // 使用 wp_die() 显示消息，这会中断评论提交流程并显示消息
             wp_die(
                 wp_kses_post( $message ),
-                esc_html__( '评论提醒', 'ai-comment-checker' ),
+                esc_html__( '评论提醒', 'spamjudge' ),
                 array(
                     'response' => 200,
                     'back_link' => true,

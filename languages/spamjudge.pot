@@ -1,0 +1,304 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the SpamJudge package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: SpamJudge 1.0.0\n"
+"Report-Msgid-Bugs-To: your-email@example.com\n"
+"POT-Creation-Date: 2025-10-27 21:25+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: spamjudge.php:140 admin/class-admin-settings.php:234
+msgid "设置"
+msgstr ""
+
+#: admin/class-admin-settings.php:62 admin/class-admin-settings.php:63
+msgid "SpamJudge"
+msgstr ""
+
+#: admin/class-admin-settings.php:193
+msgid "处理中..."
+msgstr ""
+
+#: admin/class-admin-settings.php:194 admin/class-admin-settings.php:331
+msgid "清空所有日志"
+msgstr ""
+
+#: admin/class-admin-settings.php:195
+msgid "表单验证失败："
+msgstr ""
+
+#: admin/class-admin-settings.php:196
+msgid "API 端点不能为空"
+msgstr ""
+
+#: admin/class-admin-settings.php:197
+msgid "API 端点必须是有效的 URL"
+msgstr ""
+
+#: admin/class-admin-settings.php:198
+msgid "API 密钥不能为空"
+msgstr ""
+
+#: admin/class-admin-settings.php:199
+msgid "模型 ID 不能为空"
+msgstr ""
+
+#: admin/class-admin-settings.php:200
+msgid "温度必须在 0-2 之间"
+msgstr ""
+
+#: admin/class-admin-settings.php:201
+msgid "系统提示词不能为空"
+msgstr ""
+
+#: admin/class-admin-settings.php:202
+msgid "分数阈值必须在 0-100 之间"
+msgstr ""
+
+#: admin/class-admin-settings.php:203
+msgid "超时时间必须至少为 5 秒"
+msgstr ""
+
+#: admin/class-admin-settings.php:215
+msgid "您没有权限访问此页面"
+msgstr ""
+
+#: admin/class-admin-settings.php:231
+msgid "日志"
+msgstr ""
+
+#: admin/class-admin-settings.php:275
+msgid "评论者"
+msgstr ""
+
+#: admin/class-admin-settings.php:276
+msgid "评论内容"
+msgstr ""
+
+#: admin/class-admin-settings.php:277
+msgid "API 状态码"
+msgstr ""
+
+#: admin/class-admin-settings.php:278
+msgid "AI 评分"
+msgstr ""
+
+#: admin/class-admin-settings.php:279
+msgid "执行操作"
+msgstr ""
+
+#: admin/class-admin-settings.php:280
+msgid "时间"
+msgstr ""
+
+#: admin/class-admin-settings.php:287
+msgid "暂无日志记录"
+msgstr ""
+
+#: admin/class-admin-settings.php:308
+msgid "垃圾"
+msgstr ""
+
+#: admin/class-admin-settings.php:309
+msgid "通过"
+msgstr ""
+
+#: admin/class-admin-settings.php:310
+msgid "待审核"
+msgstr ""
+
+#: admin/class-admin-settings.php:340
+msgid "&lsaquo;"
+msgstr ""
+
+#: admin/class-admin-settings.php:341
+msgid "&rsaquo;"
+msgstr ""
+
+#: admin/class-admin-settings.php:368
+msgid "API 端点"
+msgstr ""
+
+#: admin/class-admin-settings.php:375
+msgid "OpenAI 格式的 API 端点地址"
+msgstr ""
+
+#: admin/class-admin-settings.php:383
+msgid "API 密钥"
+msgstr ""
+
+#: admin/class-admin-settings.php:390
+msgid "切换密钥可见性"
+msgstr ""
+
+#: admin/class-admin-settings.php:395
+msgid "API 访问密钥"
+msgstr ""
+
+#: admin/class-admin-settings.php:403
+msgid "模型 ID"
+msgstr ""
+
+#: admin/class-admin-settings.php:410
+msgid "要使用的 AI 模型 ID"
+msgstr ""
+
+#: admin/class-admin-settings.php:418
+msgid "温度"
+msgstr ""
+
+#: admin/class-admin-settings.php:425
+msgid "控制 AI 响应的随机性（0-2，越低越确定）"
+msgstr ""
+
+#: admin/class-admin-settings.php:433
+msgid "系统提示词"
+msgstr ""
+
+#: admin/class-admin-settings.php:439
+msgid "发送给 AI 的系统提示词，用于指导 AI 如何评分"
+msgstr ""
+
+#: admin/class-admin-settings.php:447
+msgid "分数阈值"
+msgstr ""
+
+#: admin/class-admin-settings.php:454
+msgid "低于此分数的评论将被标记为垃圾评论（0-100）"
+msgstr ""
+
+#: admin/class-admin-settings.php:462
+msgid "检测到垃圾评论后的操作"
+msgstr ""
+
+#: admin/class-admin-settings.php:467
+msgid "移到垃圾队列"
+msgstr ""
+
+#: admin/class-admin-settings.php:470 admin/class-admin-settings.php:502
+msgid "移到待审核队列"
+msgstr ""
+
+#: admin/class-admin-settings.php:474
+msgid "当评论分数低于阈值时的处理方式"
+msgstr ""
+
+#: admin/class-admin-settings.php:482
+msgid "超时时间（秒）"
+msgstr ""
+
+#: admin/class-admin-settings.php:489
+msgid "API 请求超时时间"
+msgstr ""
+
+#: admin/class-admin-settings.php:497
+msgid "超时后的操作"
+msgstr ""
+
+#: admin/class-admin-settings.php:505
+msgid "直接通过"
+msgstr ""
+
+#: admin/class-admin-settings.php:509
+msgid "当 API 超时或返回无效数据时的处理方式"
+msgstr ""
+
+#: admin/class-admin-settings.php:517
+msgid "日志保留时间"
+msgstr ""
+
+#: admin/class-admin-settings.php:522
+msgid "不保存"
+msgstr ""
+
+#: admin/class-admin-settings.php:525
+msgid "1天"
+msgstr ""
+
+#: admin/class-admin-settings.php:528
+msgid "3天"
+msgstr ""
+
+#: admin/class-admin-settings.php:531
+msgid "7天"
+msgstr ""
+
+#: admin/class-admin-settings.php:534
+msgid "14天"
+msgstr ""
+
+#: admin/class-admin-settings.php:537
+msgid "30天"
+msgstr ""
+
+#: admin/class-admin-settings.php:540
+msgid "90天"
+msgstr ""
+
+#: admin/class-admin-settings.php:543
+msgid "180天"
+msgstr ""
+
+#: admin/class-admin-settings.php:546
+msgid "365天"
+msgstr ""
+
+#: admin/class-admin-settings.php:549
+msgid "永久保存"
+msgstr ""
+
+#: admin/class-admin-settings.php:553
+msgid "日志保留时长，过期日志将自动删除"
+msgstr ""
+
+#: admin/class-admin-settings.php:561
+msgid "检测为垃圾评论后对访客的提醒"
+msgstr ""
+
+#: admin/class-admin-settings.php:567
+msgid "当评论被AI检测为垃圾评论时显示给访客的提醒文字，留空则不提醒"
+msgstr ""
+
+#: admin/class-admin-settings.php:575
+msgid "检测失败后对访客的提醒"
+msgstr ""
+
+#: admin/class-admin-settings.php:581
+msgid "当AI检测失败（API错误、超时等）时显示给访客的提醒文字，留空则不提醒"
+msgstr ""
+
+#: admin/class-admin-settings.php:625
+msgid "权限不足"
+msgstr ""
+
+#: includes/class-spamjudge.php:362
+msgid "评论提醒"
+msgstr ""
+
+#: includes/class-ai-api-client.php:97
+msgid "评论者名称或评论内容为空"
+msgstr ""
+
+#: includes/class-ai-api-client.php:158
+#, php-format
+msgid "API 返回错误状态码 %1$d: %2$s"
+msgstr ""
+
+#: includes/class-ai-api-client.php:175
+msgid "API 响应格式无效"
+msgstr ""
+
+#: includes/class-ai-api-client.php:192
+#, php-format
+msgid "AI 返回的内容不是有效分数: %s"
+msgstr ""

@@ -1,15 +1,15 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the SpamJudge package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-18 19:26+0800\n"
-"PO-Revision-Date: 2025-10-19 13:40+0800\n"
+"Project-Id-Version: SpamJudge 1.0.0\n"
+"Report-Msgid-Bugs-To: your-email@example.com\n"
+"POT-Creation-Date: 2025-10-27 21:25+0800\n"
+"PO-Revision-Date: 2025-10-27 22:22+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -18,9 +18,273 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.7\n"
 
-#: ai-comment-checker.php:140 admin/class-admin-settings.php:236
+#: spamjudge.php:140 admin/class-admin-settings.php:234
 msgid "设置"
 msgstr "Settings"
+
+#: admin/class-admin-settings.php:62 admin/class-admin-settings.php:63
+msgid "SpamJudge"
+msgstr "SpamJudge"
+
+#: admin/class-admin-settings.php:193
+msgid "处理中..."
+msgstr "Processing..."
+
+#: admin/class-admin-settings.php:194 admin/class-admin-settings.php:331
+msgid "清空所有日志"
+msgstr "Clear all logs"
+
+#: admin/class-admin-settings.php:195
+msgid "表单验证失败："
+msgstr "Form validation failed:"
+
+#: admin/class-admin-settings.php:196
+msgid "API 端点不能为空"
+msgstr "The API endpoint cannot be empty"
+
+#: admin/class-admin-settings.php:197
+msgid "API 端点必须是有效的 URL"
+msgstr "The API endpoint must be a valid URL"
+
+#: admin/class-admin-settings.php:198
+msgid "API 密钥不能为空"
+msgstr "The API key cannot be empty"
+
+#: admin/class-admin-settings.php:199
+msgid "模型 ID 不能为空"
+msgstr "The model ID cannot be empty"
+
+#: admin/class-admin-settings.php:200
+msgid "温度必须在 0-2 之间"
+msgstr "The temperature must be between 0 and 2"
+
+#: admin/class-admin-settings.php:201
+msgid "系统提示词不能为空"
+msgstr "The system prompt cannot be left blank"
+
+#: admin/class-admin-settings.php:202
+msgid "分数阈值必须在 0-100 之间"
+msgstr "The score threshold must be between 0 and 100"
+
+#: admin/class-admin-settings.php:203
+msgid "超时时间必须至少为 5 秒"
+msgstr "The timeout period must be at least 5 seconds"
+
+#: admin/class-admin-settings.php:215
+msgid "您没有权限访问此页面"
+msgstr "You do not have permission to access this page"
+
+#: admin/class-admin-settings.php:231
+msgid "日志"
+msgstr "Log"
+
+#: admin/class-admin-settings.php:275
+msgid "评论者"
+msgstr "Commentator"
+
+#: admin/class-admin-settings.php:276
+msgid "评论内容"
+msgstr "Comment content"
+
+#: admin/class-admin-settings.php:277
+msgid "API 状态码"
+msgstr "API Status Codes"
+
+#: admin/class-admin-settings.php:278
+msgid "AI 评分"
+msgstr "AI Score"
+
+#: admin/class-admin-settings.php:279
+msgid "执行操作"
+msgstr "Perform the operation"
+
+#: admin/class-admin-settings.php:280
+msgid "时间"
+msgstr "Time"
+
+#: admin/class-admin-settings.php:287
+msgid "暂无日志记录"
+msgstr "No logs available"
+
+#: admin/class-admin-settings.php:308
+msgid "垃圾"
+msgstr "trash"
+
+#: admin/class-admin-settings.php:309
+msgid "通过"
+msgstr "Through"
+
+#: admin/class-admin-settings.php:310
+msgid "待审核"
+msgstr "Pending review"
+
+#: admin/class-admin-settings.php:340
+msgid "&lsaquo;"
+msgstr "&lsaquo;"
+
+#: admin/class-admin-settings.php:341
+msgid "&rsaquo;"
+msgstr "&rsaquo;"
+
+#: admin/class-admin-settings.php:368
+msgid "API 端点"
+msgstr "API Endpoint"
+
+#: admin/class-admin-settings.php:375
+msgid "OpenAI 格式的 API 端点地址"
+msgstr "OpenAI Format API Endpoint Address"
+
+#: admin/class-admin-settings.php:383
+msgid "API 密钥"
+msgstr "API Key"
+
+#: admin/class-admin-settings.php:390
+msgid "切换密钥可见性"
+msgstr "Toggle Key Visibility"
+
+#: admin/class-admin-settings.php:395
+msgid "API 访问密钥"
+msgstr "API Access Key"
+
+#: admin/class-admin-settings.php:403
+msgid "模型 ID"
+msgstr "Model ID"
+
+#: admin/class-admin-settings.php:410
+msgid "要使用的 AI 模型 ID"
+msgstr "The AI model ID to be used"
+
+#: admin/class-admin-settings.php:418
+msgid "温度"
+msgstr "Temperature"
+
+#: admin/class-admin-settings.php:425
+msgid "控制 AI 响应的随机性（0-2，越低越确定）"
+msgstr "Control the randomness of AI responses (0-2, lower values indicate greater certainty)"
+
+#: admin/class-admin-settings.php:433
+msgid "系统提示词"
+msgstr "System Prompt"
+
+#: admin/class-admin-settings.php:439
+msgid "发送给 AI 的系统提示词，用于指导 AI 如何评分"
+msgstr "System prompts sent to AI to guide how it assigns scores"
+
+#: admin/class-admin-settings.php:447
+msgid "分数阈值"
+msgstr "Score threshold"
+
+#: admin/class-admin-settings.php:454
+msgid "低于此分数的评论将被标记为垃圾评论（0-100）"
+msgstr "Comments scoring below this threshold will be flagged as spam (0-100)."
+
+#: admin/class-admin-settings.php:462
+msgid "检测到垃圾评论后的操作"
+msgstr "Actions taken after detecting spam comments"
+
+#: admin/class-admin-settings.php:467
+msgid "移到垃圾队列"
+msgstr "Move to trash queue"
+
+#: admin/class-admin-settings.php:470 admin/class-admin-settings.php:502
+msgid "移到待审核队列"
+msgstr "Move to pending review queue"
+
+#: admin/class-admin-settings.php:474
+msgid "当评论分数低于阈值时的处理方式"
+msgstr "Handling when the review score falls below the threshold"
+
+#: admin/class-admin-settings.php:482
+msgid "超时时间（秒）"
+msgstr "Timeout (seconds)"
+
+#: admin/class-admin-settings.php:489
+msgid "API 请求超时时间"
+msgstr "API Request Timeout"
+
+#: admin/class-admin-settings.php:497
+msgid "超时后的操作"
+msgstr "Operation after timeout"
+
+#: admin/class-admin-settings.php:505
+msgid "直接通过"
+msgstr "Directly through"
+
+#: admin/class-admin-settings.php:509
+msgid "当 API 超时或返回无效数据时的处理方式"
+msgstr "Handling API Timeouts or Invalid Responses"
+
+#: admin/class-admin-settings.php:517
+msgid "日志保留时间"
+msgstr "Log retention period"
+
+#: admin/class-admin-settings.php:522
+msgid "不保存"
+msgstr "Do not save"
+
+#: admin/class-admin-settings.php:525
+msgid "1天"
+msgstr "1 day"
+
+#: admin/class-admin-settings.php:528
+msgid "3天"
+msgstr "3 days"
+
+#: admin/class-admin-settings.php:531
+msgid "7天"
+msgstr "7 days"
+
+#: admin/class-admin-settings.php:534
+msgid "14天"
+msgstr "14 days"
+
+#: admin/class-admin-settings.php:537
+msgid "30天"
+msgstr "30 days"
+
+#: admin/class-admin-settings.php:540
+msgid "90天"
+msgstr "90 days"
+
+#: admin/class-admin-settings.php:543
+msgid "180天"
+msgstr "180 days"
+
+#: admin/class-admin-settings.php:546
+msgid "365天"
+msgstr "365 days"
+
+#: admin/class-admin-settings.php:549
+msgid "永久保存"
+msgstr "Permanent preservation"
+
+#: admin/class-admin-settings.php:553
+msgid "日志保留时长，过期日志将自动删除"
+msgstr "Log retention period; expired logs will be automatically deleted"
+
+#: admin/class-admin-settings.php:561
+msgid "检测为垃圾评论后对访客的提醒"
+msgstr "Notification to visitors after spam comments are detected"
+
+#: admin/class-admin-settings.php:567
+msgid "当评论被AI检测为垃圾评论时显示给访客的提醒文字，留空则不提醒"
+msgstr "When a comment is detected by AI as spam, this is the warning message displayed to visitors. Leave blank to disable the warning"
+
+#: admin/class-admin-settings.php:575
+msgid "检测失败后对访客的提醒"
+msgstr "Reminder to visitors after detection failure"
+
+#: admin/class-admin-settings.php:581
+msgid "当AI检测失败（API错误、超时等）时显示给访客的提醒文字，留空则不提醒"
+msgstr "When AI detection fails (API errors, timeouts, etc.), display this alert text to visitors. Leave blank to suppress the alert"
+
+#: admin/class-admin-settings.php:625
+msgid "权限不足"
+msgstr "Insufficient permissions"
+
+#: includes/class-spamjudge.php:362
+msgid "评论提醒"
+msgstr "Comment Notification"
 
 #: includes/class-ai-api-client.php:97
 msgid "评论者名称或评论内容为空"
@@ -39,271 +303,3 @@ msgstr "API response format is invalid"
 #, php-format
 msgid "AI 返回的内容不是有效分数: %s"
 msgstr "The content returned by AI is not a valid score: %s"
-
-#: includes/class-ai-comment-checker.php:362
-msgid "评论提醒"
-msgstr "Comment Notification"
-
-#: admin/class-admin-settings.php:62 admin/class-admin-settings.php:63
-msgid "AI Comment Checker"
-msgstr "AI Comment Checker"
-
-#: admin/class-admin-settings.php:193
-msgid "处理中..."
-msgstr "Processing..."
-
-#: admin/class-admin-settings.php:194 admin/class-admin-settings.php:275
-msgid "清空所有日志"
-msgstr "Clear all logs"
-
-#: admin/class-admin-settings.php:195
-msgid "显示"
-msgstr "Display"
-
-#: admin/class-admin-settings.php:196
-msgid "隐藏"
-msgstr "Hide"
-
-#: admin/class-admin-settings.php:197
-msgid "表单验证失败："
-msgstr "Form validation failed:"
-
-#: admin/class-admin-settings.php:198
-msgid "API 端点不能为空"
-msgstr "The API endpoint cannot be empty"
-
-#: admin/class-admin-settings.php:199
-msgid "API 端点必须是有效的 URL"
-msgstr "The API endpoint must be a valid URL"
-
-#: admin/class-admin-settings.php:200
-msgid "API 密钥不能为空"
-msgstr "The API key cannot be empty"
-
-#: admin/class-admin-settings.php:201
-msgid "模型 ID 不能为空"
-msgstr "Model ID cannot be empty"
-
-#: admin/class-admin-settings.php:202
-msgid "温度必须在 0-2 之间"
-msgstr "The temperature must be between 0 and 2"
-
-#: admin/class-admin-settings.php:203
-msgid "系统提示词不能为空"
-msgstr "The system prompt cannot be left blank"
-
-#: admin/class-admin-settings.php:204
-msgid "分数阈值必须在 0-100 之间"
-msgstr "The score threshold must be between 0 and 100"
-
-#: admin/class-admin-settings.php:205
-msgid "超时时间必须至少为 5 秒"
-msgstr "The timeout period must be at least 5 seconds"
-
-#: admin/class-admin-settings.php:217
-msgid "您没有权限访问此页面"
-msgstr "You do not have permission to access this page"
-
-#: admin/class-admin-settings.php:233
-msgid "日志"
-msgstr "Log"
-
-#: admin/class-admin-settings.php:283
-msgid "评论者"
-msgstr "Commentator"
-
-#: admin/class-admin-settings.php:284
-msgid "评论内容"
-msgstr "Comment content"
-
-#: admin/class-admin-settings.php:285
-msgid "API 状态码"
-msgstr "API Status Codes"
-
-#: admin/class-admin-settings.php:286
-msgid "AI 评分"
-msgstr "AI Score"
-
-#: admin/class-admin-settings.php:287
-msgid "执行操作"
-msgstr "Perform the operation"
-
-#: admin/class-admin-settings.php:288
-msgid "时间"
-msgstr "Time"
-
-#: admin/class-admin-settings.php:295
-msgid "暂无日志记录"
-msgstr "No logs available"
-
-#: admin/class-admin-settings.php:316
-msgid "垃圾"
-msgstr "trash"
-
-#: admin/class-admin-settings.php:317
-msgid "通过"
-msgstr "Through"
-
-#: admin/class-admin-settings.php:318
-msgid "待审核"
-msgstr "Pending review"
-
-#: admin/class-admin-settings.php:343
-msgid "&laquo;"
-msgstr "&laquo;"
-
-#: admin/class-admin-settings.php:344
-msgid "&raquo;"
-msgstr "&raquo;"
-
-#: admin/class-admin-settings.php:371
-msgid "API 端点"
-msgstr "API Endpoint"
-
-#: admin/class-admin-settings.php:378
-msgid "OpenAI 格式的 API 端点地址"
-msgstr "OpenAI Format API Endpoint Address"
-
-#: admin/class-admin-settings.php:386
-msgid "API 密钥"
-msgstr "API Key"
-
-#: admin/class-admin-settings.php:393
-msgid "API 访问密钥"
-msgstr "API Access Key"
-
-#: admin/class-admin-settings.php:401
-msgid "模型 ID"
-msgstr "Model ID"
-
-#: admin/class-admin-settings.php:408
-msgid "要使用的 AI 模型 ID"
-msgstr "The AI model ID to be used"
-
-#: admin/class-admin-settings.php:416
-msgid "温度"
-msgstr "Temperature"
-
-#: admin/class-admin-settings.php:423
-msgid "控制 AI 响应的随机性（0-2，越低越确定）"
-msgstr "Control the randomness of AI responses (0-2, lower values indicate greater certainty)"
-
-#: admin/class-admin-settings.php:431
-msgid "系统提示词"
-msgstr "System Prompt"
-
-#: admin/class-admin-settings.php:437
-msgid "发送给 AI 的系统提示词，用于指导 AI 如何评分"
-msgstr "System prompts sent to AI to guide how it assigns scores"
-
-#: admin/class-admin-settings.php:445
-msgid "分数阈值"
-msgstr "Score threshold"
-
-#: admin/class-admin-settings.php:452
-msgid "低于此分数的评论将被标记为垃圾评论（0-100）"
-msgstr "Comments scoring below this threshold will be flagged as spam (0-100)."
-
-#: admin/class-admin-settings.php:460
-msgid "检测到垃圾评论后的操作"
-msgstr "Actions taken after detecting spam comments"
-
-#: admin/class-admin-settings.php:465
-msgid "移到垃圾队列"
-msgstr "Move to trash queue"
-
-#: admin/class-admin-settings.php:468 admin/class-admin-settings.php:500
-msgid "移到待审核队列"
-msgstr "Move to pending review queue"
-
-#: admin/class-admin-settings.php:472
-msgid "当评论分数低于阈值时的处理方式"
-msgstr "Handling when the review score falls below the threshold"
-
-#: admin/class-admin-settings.php:480
-msgid "超时时间（秒）"
-msgstr "Timeout (seconds)"
-
-#: admin/class-admin-settings.php:487
-msgid "API 请求超时时间"
-msgstr "API Request Timeout"
-
-#: admin/class-admin-settings.php:495
-msgid "超时后的操作"
-msgstr "Operation after timeout"
-
-#: admin/class-admin-settings.php:503
-msgid "直接通过"
-msgstr "Directly through"
-
-#: admin/class-admin-settings.php:507
-msgid "当 API 超时或返回无效数据时的处理方式"
-msgstr "Handling API Timeouts or Invalid Responses"
-
-#: admin/class-admin-settings.php:515
-msgid "日志保留时间"
-msgstr "Log retention period"
-
-#: admin/class-admin-settings.php:520
-msgid "不保存"
-msgstr "Do not save"
-
-#: admin/class-admin-settings.php:523
-msgid "1天"
-msgstr "1 day"
-
-#: admin/class-admin-settings.php:526
-msgid "3天"
-msgstr "3 days"
-
-#: admin/class-admin-settings.php:529
-msgid "7天"
-msgstr "7 days"
-
-#: admin/class-admin-settings.php:532
-msgid "14天"
-msgstr "14 days"
-
-#: admin/class-admin-settings.php:535
-msgid "30天"
-msgstr "30 days"
-
-#: admin/class-admin-settings.php:538
-msgid "90天"
-msgstr "90 days"
-
-#: admin/class-admin-settings.php:541
-msgid "180天"
-msgstr "180 days"
-
-#: admin/class-admin-settings.php:544
-msgid "365天"
-msgstr "365 days"
-
-#: admin/class-admin-settings.php:547
-msgid "永久保存"
-msgstr "Permanent preservation"
-
-#: admin/class-admin-settings.php:551
-msgid "日志保留时长，过期日志将自动删除"
-msgstr "Log retention period; expired logs will be automatically deleted"
-
-#: admin/class-admin-settings.php:559
-msgid "检测为垃圾评论后对访客的提醒"
-msgstr "Reminder to visitors after detecting spam comments"
-
-#: admin/class-admin-settings.php:565
-msgid "当评论被AI检测为垃圾评论时显示给访客的提醒文字，留空则不提醒"
-msgstr "When a comment is detected by AI as spam, this is the warning message displayed to visitors. Leave blank to disable the warning"
-
-#: admin/class-admin-settings.php:573
-msgid "检测失败后对访客的提醒"
-msgstr "Reminder to visitors after detection failure"
-
-#: admin/class-admin-settings.php:579
-msgid "当AI检测失败（API错误、超时等）时显示给访客的提醒文字，留空则不提醒"
-msgstr "When AI detection fails (API errors, timeouts, etc.), display this alert text to visitors. Leave blank to suppress the alert"
-
-#: admin/class-admin-settings.php:623
-msgid "权限不足"
-msgstr "Insufficient permissions"

@@ -1,4 +1,4 @@
-=== AI Comment Checker ===
+=== SpamJudge ===
 Contributors: cottboy
 Tags: ai, llm, spam, spam-comments, comment
 Requires at least: 5.0
@@ -12,7 +12,7 @@ Using AI large language models to automatically detect and filter spam comments,
 
 == Description ==
 
-AI Comment Checker uses AI large language models to automatically detect and filter spam comments.
+SpamJudge uses AI large language models to automatically detect and filter spam comments.
 
 = Features =
 
@@ -63,7 +63,7 @@ If you output anything other than a single number, the system will fail.
 
 1. Log in to the WordPress admin dashboard
 2. Navigate to "Plugins" > "Add New"
-3. Search for "AI Comment Checker"
+3. Search for "SpamJudge"
 4. Click "Install Now"
 5. After installation is complete, click "Activate"
 
@@ -79,10 +79,10 @@ If you output anything other than a single number, the system will fail.
 = FTP Installation =
 
 1. Unzip the plugin zip file
-2. Upload the `ai-comment-checker` folder to the `/wp-content/plugins/` directory via FTP
+2. Upload the `spamjudge` folder to the `/wp-content/plugins/` directory via FTP
 3. Log in to the WordPress admin dashboard
 4. Go to the "Plugins" page
-5. Locate "AI Comment Checker" and click "Activate"
+5. Locate "SpamJudge" and click "Activate"
 
 == Frequently Asked Questions ==
 
@@ -96,7 +96,7 @@ Comment data will be sent to the API you configure for scoring. Make sure to use
 
 = How much additional wait time will be added when submitting a comment? =
 
-It adds about 5 seconds, depending on the service provider and model used. Using a non-thinking model can effectively reduce wait time.
+It adds about 3 seconds, depending on the service provider and model used. Using a non-thinking model can effectively reduce wait time.
 
 = What should I do if the request still fails after all options are configured? =
 

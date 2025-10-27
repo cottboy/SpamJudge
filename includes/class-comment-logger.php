@@ -4,7 +4,7 @@
  * 
  * 负责记录和管理评论审核日志
  *
- * @package AI_Comment_Checker
+ * @package SpamJudge
  */
 
 // 如果直接访问此文件，则退出
@@ -29,7 +29,7 @@ class AI_Comment_Logger {
      */
     public function __construct() {
         global $wpdb;
-        $this->table_name = $wpdb->prefix . 'ai_comment_checker_logs';
+        $this->table_name = $wpdb->prefix . 'spamjudge_logs';
     }
     
     /**
@@ -119,7 +119,7 @@ class AI_Comment_Logger {
         
         // 自定义表无 WP API，COUNT 查询不适合缓存
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- 自定义表必须直接查询，COUNT 实时计算，表名固定安全
-        $count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$this->table_name}" ) );
+        $count = $wpdb->get_var( "SELECT COUNT(*) FROM {$this->table_name}" );
 
         return absint( $count );
     }
@@ -147,7 +147,7 @@ class AI_Comment_Logger {
         global $wpdb;
         
         // 获取日志保留设置
-        $settings = get_option( 'ai_comment_checker_settings', array() );
+        $settings = get_option( 'spamjudge_settings', array() );
         $retention_days = isset( $settings['log_retention'] ) ? intval( $settings['log_retention'] ) : 30;
         
         // 0 表示不保存，-1 表示永久保存
