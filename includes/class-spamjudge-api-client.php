@@ -1,6 +1,6 @@
 <?php
 /**
- * AI API 客户端类
+ * API 客户端类
  * 
  * 负责与 OpenAI 格式的 API 进行通信
  *
@@ -13,9 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * AI API 客户端类
+ * API 客户端类
  */
-class AI_API_Client {
+class SpamJudge_API_Client {
     
     /**
      * API 端点

@@ -90,8 +90,8 @@ register_activation_hook( __FILE__, 'spamjudge_activate' );
 /**
  * 加载插件核心文件
  */
-require_once SPAMJUDGE_PLUGIN_DIR . 'includes/class-ai-api-client.php';
-require_once SPAMJUDGE_PLUGIN_DIR . 'includes/class-comment-logger.php';
+require_once SPAMJUDGE_PLUGIN_DIR . 'includes/class-spamjudge-api-client.php';
+require_once SPAMJUDGE_PLUGIN_DIR . 'includes/class-spamjudge-comment-logger.php';
 require_once SPAMJUDGE_PLUGIN_DIR . 'includes/class-spamjudge.php';
 
 // 仅在管理后台加载管理类
@@ -117,7 +117,7 @@ add_action( 'init', 'spamjudge_init' );
  * 定期清理过期日志
  */
 function spamjudge_cleanup_logs() {
-    $logger = new AI_Comment_Logger();
+    $logger = new SpamJudge_Comment_Logger();
     $logger->cleanup_old_logs();
 }
 // 每天执行一次日志清理

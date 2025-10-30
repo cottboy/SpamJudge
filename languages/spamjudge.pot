@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SpamJudge 1.0.0\n"
-"Report-Msgid-Bugs-To: your-email@example.com\n"
-"POT-Creation-Date: 2025-10-27 21:25+0800\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-31 00:17+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,28 @@ msgstr ""
 
 #: spamjudge.php:140 admin/class-admin-settings.php:234
 msgid "设置"
+msgstr ""
+
+#: includes/class-spamjudge.php:362
+msgid "评论提醒"
+msgstr ""
+
+#: includes/class-spamjudge-api-client.php:97
+msgid "评论者名称或评论内容为空"
+msgstr ""
+
+#: includes/class-spamjudge-api-client.php:158
+#, php-format
+msgid "API 返回错误状态码 %1$d: %2$s"
+msgstr ""
+
+#: includes/class-spamjudge-api-client.php:175
+msgid "API 响应格式无效"
+msgstr ""
+
+#: includes/class-spamjudge-api-client.php:192
+#, php-format
+msgid "AI 返回的内容不是有效分数: %s"
 msgstr ""
 
 #: admin/class-admin-settings.php:62 admin/class-admin-settings.php:63
@@ -279,26 +301,4 @@ msgstr ""
 
 #: admin/class-admin-settings.php:625
 msgid "权限不足"
-msgstr ""
-
-#: includes/class-spamjudge.php:362
-msgid "评论提醒"
-msgstr ""
-
-#: includes/class-ai-api-client.php:97
-msgid "评论者名称或评论内容为空"
-msgstr ""
-
-#: includes/class-ai-api-client.php:158
-#, php-format
-msgid "API 返回错误状态码 %1$d: %2$s"
-msgstr ""
-
-#: includes/class-ai-api-client.php:175
-msgid "API 响应格式无效"
-msgstr ""
-
-#: includes/class-ai-api-client.php:192
-#, php-format
-msgid "AI 返回的内容不是有效分数: %s"
 msgstr ""

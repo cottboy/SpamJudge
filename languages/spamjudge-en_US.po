@@ -7,9 +7,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SpamJudge 1.0.0\n"
-"Report-Msgid-Bugs-To: your-email@example.com\n"
-"POT-Creation-Date: 2025-10-27 21:25+0800\n"
-"PO-Revision-Date: 2025-10-27 22:22+0800\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-31 00:17+0800\n"
+"PO-Revision-Date: 2025-10-31 01:09+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -21,6 +21,28 @@ msgstr ""
 #: spamjudge.php:140 admin/class-admin-settings.php:234
 msgid "设置"
 msgstr "Settings"
+
+#: includes/class-spamjudge.php:362
+msgid "评论提醒"
+msgstr "Comment Notification"
+
+#: includes/class-spamjudge-api-client.php:97
+msgid "评论者名称或评论内容为空"
+msgstr "Commenter name or comment content is empty"
+
+#: includes/class-spamjudge-api-client.php:158
+#, php-format
+msgid "API 返回错误状态码 %1$d: %2$s"
+msgstr "API returned error status code %1$d: %2$s"
+
+#: includes/class-spamjudge-api-client.php:175
+msgid "API 响应格式无效"
+msgstr "API response format is invalid"
+
+#: includes/class-spamjudge-api-client.php:192
+#, php-format
+msgid "AI 返回的内容不是有效分数: %s"
+msgstr "The content returned by AI is not a valid score: %s"
 
 #: admin/class-admin-settings.php:62 admin/class-admin-settings.php:63
 msgid "SpamJudge"
@@ -52,7 +74,7 @@ msgstr "The API key cannot be empty"
 
 #: admin/class-admin-settings.php:199
 msgid "模型 ID 不能为空"
-msgstr "The model ID cannot be empty"
+msgstr "The Model ID cannot be empty"
 
 #: admin/class-admin-settings.php:200
 msgid "温度必须在 0-2 之间"
@@ -264,7 +286,7 @@ msgstr "Log retention period; expired logs will be automatically deleted"
 
 #: admin/class-admin-settings.php:561
 msgid "检测为垃圾评论后对访客的提醒"
-msgstr "Notification to visitors after spam comments are detected"
+msgstr "Reminder to visitors after detecting spam comments"
 
 #: admin/class-admin-settings.php:567
 msgid "当评论被AI检测为垃圾评论时显示给访客的提醒文字，留空则不提醒"
@@ -281,25 +303,3 @@ msgstr "When AI detection fails (API errors, timeouts, etc.), display this alert
 #: admin/class-admin-settings.php:625
 msgid "权限不足"
 msgstr "Insufficient permissions"
-
-#: includes/class-spamjudge.php:362
-msgid "评论提醒"
-msgstr "Comment Notification"
-
-#: includes/class-ai-api-client.php:97
-msgid "评论者名称或评论内容为空"
-msgstr "Commenter name or comment content is empty"
-
-#: includes/class-ai-api-client.php:158
-#, php-format
-msgid "API 返回错误状态码 %1$d: %2$s"
-msgstr "API returned error status code %1$d: %2$s"
-
-#: includes/class-ai-api-client.php:175
-msgid "API 响应格式无效"
-msgstr "API response format is invalid"
-
-#: includes/class-ai-api-client.php:192
-#, php-format
-msgid "AI 返回的内容不是有效分数: %s"
-msgstr "The content returned by AI is not a valid score: %s"

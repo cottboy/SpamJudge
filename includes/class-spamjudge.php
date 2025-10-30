@@ -124,13 +124,13 @@ If you output anything other than a single number, the system will fail.',
         }
 
         // 创建 AI API 客户端
-        $api_client = new AI_API_Client( $this->settings );
+        $api_client = new SpamJudge_API_Client( $this->settings );
 
         // 调用 AI 检查评论
         $result = $api_client->check_comment( $comment_author, $comment_content );
 
         // 初始化日志记录器
-        $logger = new AI_Comment_Logger();
+        $logger = new SpamJudge_Comment_Logger();
 
         // 确定要执行的操作
         $action = 'approved'; // 默认通过
@@ -310,7 +310,7 @@ If you output anything other than a single number, the system will fail.',
         delete_transient( 'spamjudge_pending_log' );
 
         // 记录日志（不记录comment_id）
-        $logger = new AI_Comment_Logger();
+        $logger = new SpamJudge_Comment_Logger();
         $logger->log(
             $check_data['comment_author'],
             $check_data['comment_content'],

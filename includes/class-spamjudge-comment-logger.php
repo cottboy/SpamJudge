@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * 评论日志记录类
  */
-class AI_Comment_Logger {
+class SpamJudge_Comment_Logger {
     
     /**
      * 日志表名

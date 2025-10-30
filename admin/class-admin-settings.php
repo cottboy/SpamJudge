@@ -253,7 +253,7 @@ class SpamJudge_Admin_Settings {
      * 渲染日志标签页
      */
     private function render_logs_tab() {
-        $logger = new AI_Comment_Logger();
+        $logger = new SpamJudge_Comment_Logger();
 
         // 获取当前页码（仅用于显示，无状态变更）
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading pagination from $_GET for display only
@@ -602,7 +602,7 @@ class SpamJudge_Admin_Settings {
         }
 
         // 清空日志
-        $logger = new AI_Comment_Logger();
+        $logger = new SpamJudge_Comment_Logger();
         $result = $logger->clear_all_logs();
 
         // 返回结果，不包含任何消息
@@ -630,7 +630,7 @@ class SpamJudge_Admin_Settings {
         $page = isset( $_POST['page'] ) ? max( 1, absint( wp_unslash( $_POST['page'] ) ) ) : 1;
         
         // 获取日志
-        $logger = new AI_Comment_Logger();
+        $logger = new SpamJudge_Comment_Logger();
         $logs = $logger->get_logs( $page, 20 );
         
         wp_send_json_success( array( 'logs' => $logs ) );
