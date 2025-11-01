@@ -104,7 +104,7 @@ Check whether /v1/chat/completions is added after the API endpoint.
 
 == Screenshots ==
 
-1. Log interface  
+1. Log interface
 2. Settings interface
 
 == Changelog ==
