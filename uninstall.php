@@ -14,7 +14,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 
 global $wpdb;
 
-// 删除插件选项
+// 删除插件设置选项
 delete_option( 'spamjudge_settings' );
 
 // 删除日志表（包含所有日志数据）

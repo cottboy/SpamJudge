@@ -71,12 +71,14 @@
     justify-content: space-between;
 }
 
+/* 分页左侧按钮容器 */
 .tablenav-left {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
+/* 分页容器布局 */
 .tablenav-pages {
     display: flex;
     align-items: center;
@@ -96,11 +98,13 @@
     }
 }
 
+/* 分页链接容器布局 */
 .tablenav-pages .pagination-links {
     display: flex;
     gap: 5px;
 }
 
+/* 分页链接基础样式 */
 .tablenav-pages a,
 .tablenav-pages span {
     padding: 5px 10px;
@@ -110,10 +114,12 @@
     color: #2271b1;
 }
 
+/* 分页链接悬停效果 */
 .tablenav-pages a:hover {
     background: #f0f0f0;
 }
 
+/* 当前页码高亮 */
 .tablenav-pages .current {
     background: #2271b1;
     color: #fff;
@@ -125,6 +131,7 @@
     width: 200px;
 }
 
+/* 表单输入字段统一宽度 */
 .form-table input[type="text"],
 .form-table input[type="url"],
 .form-table input[type="password"],
@@ -135,6 +142,7 @@
     max-width: 500px;
 }
 
+/* 表单说明文字样式 */
 .form-table .description {
     margin-top: 5px;
     color: #666;
@@ -167,6 +175,7 @@
     color: #787c82;
 }
 
+/* 眼睛按钮悬停效果 */
 .sj-toggle-password:hover {
     color: #2271b1;
 }

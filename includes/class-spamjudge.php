@@ -166,7 +166,7 @@ If you output anything other than a single number, the system will fail.',
                 $comment_approved = 1;
             }
 
-            // 记录日志（使用临时 ID，因为评论还未插入数据库）
+            // 记录日志（使用临时存储，因为评论还未插入数据库）
             // 我们将在评论插入后更新日志
             $this->log_pending_check( array(
                 'comment_author' => $comment_author,

@@ -1,6 +1,6 @@
 === SpamJudge ===
 Contributors: cottboy
-Tags: ai, llm, spam, spam-comments, comment
+Tags: ai, llm, spam, spam-comments, anti-spam
 Requires at least: 5.0
 Tested up to: 6.8
 Stable tag: 1.0.0
@@ -109,7 +109,7 @@ If you output anything other than a single number, the system will fail.
 
 == Changelog ==
 
-= 1.0.0 =
+= 1.0.0（2025-11-01） =
 首个版本发布
 
 == Upgrade Notice ==

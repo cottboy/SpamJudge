@@ -1,6 +1,6 @@
 === SpamJudge ===
 Contributors: cottboy
-Tags: ai, llm, spam, spam-comments, comment
+Tags: ai, llm, spam, spam-comments, anti-spam
 Requires at least: 5.0
 Tested up to: 6.8
 Stable tag: 1.0.0
@@ -109,7 +109,7 @@ Check whether /v1/chat/completions is added after the API endpoint.
 
 == Changelog ==
 
-= 1.0.0 =
+= 1.0.0（2025-11-01） =
 First version released
 
 == Upgrade Notice ==
