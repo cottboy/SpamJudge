@@ -121,8 +121,20 @@ class SpamJudge_API_Client {
             'temperature' => $this->temperature,
         );
         
+        // 根据安全规则动态拼装请求端点
+        $prepared_endpoint = $this->prepare_request_endpoint();
+
+        if ( empty( $prepared_endpoint ) ) {
+            return array(
+                'success' => false,
+                'score' => null,
+                'status_code' => null,
+                'error' => __( 'API 端点无效', 'spamjudge' ),
+            );
+        }
+
         // 发送 API 请求
-        $response = wp_remote_post( $this->api_endpoint, array(
+        $response = wp_remote_post( $prepared_endpoint, array(
             'headers' => array(
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Bearer ' . $this->api_key,
@@ -227,6 +239,94 @@ class SpamJudge_API_Client {
         }
 
         return $score;
+    }
+
+    /**
+     * 构造最终请求端点
+     *
+     * - 明确处理以 # 结尾的 URL，防止携带片段
+     * - 兼容用户未写版本路径的情况，自动补全 chat completions 端点
+     * - 对已指向 /v1/chat/completions 或 /v1/responses 的 URL 保持不变
+     *
+     * @return string 构造后的端点
+     */
+    private function prepare_request_endpoint() {
+        $endpoint = trim( $this->api_endpoint );
+
+        if ( $endpoint === '' ) {
+            return '';
+        }
+
+        // 全量匹配无需处理的端点
+        if ( $this->is_preserved_api_path( $endpoint ) ) {
+            return $endpoint;
+        }
+
+        // 去掉末尾的 #，确保不携带片段。
+        if ( substr( $endpoint, -1 ) === '#' ) {
+            $endpoint = rtrim( $endpoint, '# ' );
+
+            if ( $endpoint === '' ) {
+                return '';
+            }
+
+            if ( $this->is_preserved_api_path( $endpoint ) ) {
+                return $endpoint;
+            }
+        }
+
+        // 以 / 结尾 → 直接拼接 chat/completions
+        if ( substr( $endpoint, -1 ) === '/' ) {
+            return $endpoint . 'chat/completions';
+        }
+
+        // 其他情况默认补全 /v1/chat/completions
+        return $endpoint . '/v1/chat/completions';
+    }
+
+    /**
+     * 判断端点是否属于无需变更的目标路径
+     *
+     * @param string $endpoint 当前端点
+     * @return bool
+     */
+    private function is_preserved_api_path( $endpoint ) {
+        $suffixes = array(
+            '/v1/chat/completions',
+            '/v1/chat/completions/',
+            '/v1/responses',
+            '/v1/responses/',
+        );
+
+        foreach ( $suffixes as $suffix ) {
+            if ( $this->ends_with( $endpoint, $suffix ) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 安全判断字符串是否以指定后缀结尾
+     *
+     * @param string $haystack 原始字符串
+     * @param string $needle 后缀
+     * @return bool
+     */
+    private function ends_with( $haystack, $needle ) {
+        $haystack_length = strlen( $haystack );
+        $needle_length = strlen( $needle );
+
+        if ( $needle_length === 0 ) {
+            return true;
+        }
+
+        if ( $needle_length > $haystack_length ) {
+            return false;
+        }
+
+        return substr( $haystack, - $needle_length ) === $needle;
     }
 }
 
