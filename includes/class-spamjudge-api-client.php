@@ -275,6 +275,11 @@ class SpamJudge_API_Client {
             }
         }
 
+        // 以 /v1 结尾 → 拼接 /chat/completions，避免重复附加版本前缀
+        if ( $this->ends_with( $endpoint, '/v1' ) ) {
+            return $endpoint . '/chat/completions';
+        }
+
         // 以 / 结尾 → 直接拼接 chat/completions
         if ( substr( $endpoint, -1 ) === '/' ) {
             return $endpoint . 'chat/completions';
