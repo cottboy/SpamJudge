@@ -105,23 +105,7 @@ class SpamJudge_API_Client {
             sanitize_textarea_field( $comment_content )
         );
         
-        // 构建请求体
-        $request_body = array(
-            'model' => $this->model_id,
-            'messages' => array(
-                array(
-                    'role' => 'system',
-                    'content' => $this->system_prompt,
-                ),
-                array(
-                    'role' => 'user',
-                    'content' => $user_message,
-                ),
-            ),
-            'temperature' => $this->temperature,
-        );
-        
-        // 根据安全规则动态拼装请求端点
+        // 根据安全规则动态拼装请求端点（一次性计算，后续复用）
         $prepared_endpoint = $this->prepare_request_endpoint();
 
         if ( empty( $prepared_endpoint ) ) {
@@ -133,6 +117,43 @@ class SpamJudge_API_Client {
             );
         }
 
+        // 判定当前请求是否指向 /v1/responses 端点（使用已补全后的端点判断，避免误差）
+        $is_responses_api = $this->is_responses_endpoint( $prepared_endpoint );
+
+        // 构建请求体：区分 Chat Completions 与 Responses API
+        if ( $is_responses_api ) {
+            /**
+             * Responses API 请求体
+             *
+             * - 使用 instructions 传递系统提示词，保持与 Chat Completions 行为一致
+             * - input 支持多模态；此处仅传递文本，满足当前评分需求
+             * - temperature 与原逻辑保持一致
+             * - 不开启流式，避免前端解析差异
+             */
+            $request_body = array(
+                'model' => $this->model_id,
+                'instructions' => $this->system_prompt,
+                'input' => $user_message,
+                'temperature' => $this->temperature,
+            );
+        } else {
+            // Chat Completions 请求体保持不变
+            $request_body = array(
+                'model' => $this->model_id,
+                'messages' => array(
+                    array(
+                        'role' => 'system',
+                        'content' => $this->system_prompt,
+                    ),
+                    array(
+                        'role' => 'user',
+                        'content' => $user_message,
+                    ),
+                ),
+                'temperature' => $this->temperature,
+            );
+        }
+        
         // 发送 API 请求
         $response = wp_remote_post( $prepared_endpoint, array(
             'headers' => array(
@@ -177,9 +198,16 @@ class SpamJudge_API_Client {
         // 解析响应体
         $body = wp_remote_retrieve_body( $response );
         $data = json_decode( $body, true );
-        
+
+        // 针对不同端点执行响应提取
+        if ( $is_responses_api ) {
+            $ai_response = $this->extract_responses_api_text( $data );
+        } else {
+            $ai_response = $this->extract_chat_completions_text( $data );
+        }
+
         // 验证响应数据
-        if ( ! is_array( $data ) || ! isset( $data['choices'][0]['message']['content'] ) ) {
+        if ( $ai_response === null ) {
             return array(
                 'success' => false,
                 'score' => null,
@@ -187,9 +215,6 @@ class SpamJudge_API_Client {
                 'error' => __( 'API 响应格式无效', 'spamjudge' ),
             );
         }
-        
-        // 提取 AI 返回的内容
-        $ai_response = trim( $data['choices'][0]['message']['content'] );
         
         // 尝试从响应中提取分数（0-100）
         $score = $this->extract_score( $ai_response );
@@ -239,6 +264,60 @@ class SpamJudge_API_Client {
         }
 
         return $score;
+    }
+
+    /**
+     * 判定是否为 /v1/responses 端点
+     *
+     * @param string $endpoint 已补全后的端点
+     * @return bool
+     */
+    private function is_responses_endpoint( $endpoint ) {
+        return $this->ends_with( $endpoint, '/v1/responses' );
+    }
+
+    /**
+     * 提取 Chat Completions 响应中的文本
+     *
+     * @param array $data 解码后的响应数据
+     * @return string|null
+     */
+    private function extract_chat_completions_text( $data ) {
+        if ( ! is_array( $data ) || ! isset( $data['choices'][0]['message']['content'] ) ) {
+            return null;
+        }
+
+        return trim( $data['choices'][0]['message']['content'] );
+    }
+
+    /**
+     * 提取 Responses API 响应中的文本
+     *
+     * 优先使用 output_text（官方推荐的便捷字段），若不存在则回退读取
+     * output 数组中的 content 文本字段；若仍不存在则返回 null。
+     *
+     * @param array $data 解码后的响应数据
+     * @return string|null
+     */
+    private function extract_responses_api_text( $data ) {
+        if ( ! is_array( $data ) ) {
+            return null;
+        }
+
+        // 首选 output_text 数组
+        if ( isset( $data['output_text'][0] ) && is_string( $data['output_text'][0] ) ) {
+            return trim( $data['output_text'][0] );
+        }
+
+        // 兼容 output -> content -> text 结构
+        if (
+            isset( $data['output'][0]['content'][0]['text'] )
+            && is_string( $data['output'][0]['content'][0]['text'] )
+        ) {
+            return trim( $data['output'][0]['content'][0]['text'] );
+        }
+
+        return null;
     }
 
     /**
