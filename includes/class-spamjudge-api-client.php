@@ -298,9 +298,7 @@ class SpamJudge_API_Client {
     private function is_preserved_api_path( $endpoint ) {
         $suffixes = array(
             '/v1/chat/completions',
-            '/v1/chat/completions/',
             '/v1/responses',
-            '/v1/responses/',
         );
 
         foreach ( $suffixes as $suffix ) {
