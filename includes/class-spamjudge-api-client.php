@@ -321,12 +321,20 @@ class SpamJudge_API_Client {
             return trim( $data['output_text'][0] );
         }
 
-        // 兼容 output -> content -> text 结构
-        if (
-            isset( $data['output'][0]['content'][0]['text'] )
-            && is_string( $data['output'][0]['content'][0]['text'] )
-        ) {
-            return trim( $data['output'][0]['content'][0]['text'] );
+        // 兼容 output 数组：遍历所有输出项与内容项，找到第一个文本
+        if ( isset( $data['output'] ) && is_array( $data['output'] ) ) {
+            foreach ( $data['output'] as $output_item ) {
+                if ( ! isset( $output_item['content'] ) || ! is_array( $output_item['content'] ) ) {
+                    continue;
+                }
+
+                foreach ( $output_item['content'] as $content_item ) {
+                    // Responses API 文本内容通常包含 type=output_text 与 text 字段
+                    if ( isset( $content_item['text'] ) && is_string( $content_item['text'] ) ) {
+                        return trim( $content_item['text'] );
+                    }
+                }
+            }
         }
 
         return null;
