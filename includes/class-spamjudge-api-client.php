@@ -125,26 +125,26 @@ class SpamJudge_API_Client {
             /**
              * Responses API 请求体
              *
-             * - 使用 instructions 传递系统提示词，保持与 Chat Completions 行为一致
-             * - input 支持多模态；此处仅传递文本，满足当前评分需求
-             * - temperature 与原逻辑保持一致
-             * - 不开启流式，避免前端解析差异
-             * - 使用符合官方规范的多段输入格式，提升兼容性（含思考模型）
+             * - 按官方规范使用 role/content 结构的 input（参考 v1/responses 文档）
+             * - 明确传递 system 与 user 两条消息，避免部分兼容实现忽略 instructions 导致提示词失效
+             * - 保持温度与非流式设置一致，避免行为差异
+             * - 仅传递文本输入，满足当前评分需求
              */
+            $input_messages = array(
+                array(
+                    'role'    => 'system',
+                    'content' => $this->system_prompt,
+                ),
+                array(
+                    'role'    => 'user',
+                    'content' => $user_message,
+                ),
+            );
+
             $request_body = array(
                 'model' => $this->model_id,
-                'instructions' => $this->system_prompt,
-                'input' => array(
-                    array(
-                        'role' => 'user',
-                        'content' => array(
-                            array(
-                                'type' => 'input_text',
-                                'text' => $user_message,
-                            ),
-                        ),
-                    ),
-                ),
+                // 使用 messages 风格的 input，兼容要求 system 角色提示词的供应商
+                'input' => $input_messages,
                 'temperature' => $this->temperature,
                 'stream' => false,
             );
@@ -317,8 +317,15 @@ class SpamJudge_API_Client {
         }
 
         // 首选 output_text 数组
-        if ( isset( $data['output_text'][0] ) && is_string( $data['output_text'][0] ) ) {
-            return trim( $data['output_text'][0] );
+        if ( isset( $data['output_text'] ) ) {
+            // output_text 可能是字符串或数组，做兼容处理
+            if ( is_string( $data['output_text'] ) ) {
+                return trim( $data['output_text'] );
+            }
+
+            if ( is_array( $data['output_text'] ) && isset( $data['output_text'][0] ) && is_string( $data['output_text'][0] ) ) {
+                return trim( $data['output_text'][0] );
+            }
         }
 
         // 兼容 output 数组：遍历所有输出项与内容项，找到第一个文本
