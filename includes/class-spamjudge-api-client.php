@@ -129,12 +129,24 @@ class SpamJudge_API_Client {
              * - input 支持多模态；此处仅传递文本，满足当前评分需求
              * - temperature 与原逻辑保持一致
              * - 不开启流式，避免前端解析差异
+             * - 使用符合官方规范的多段输入格式，提升兼容性（含思考模型）
              */
             $request_body = array(
                 'model' => $this->model_id,
                 'instructions' => $this->system_prompt,
-                'input' => $user_message,
+                'input' => array(
+                    array(
+                        'role' => 'user',
+                        'content' => array(
+                            array(
+                                'type' => 'input_text',
+                                'text' => $user_message,
+                            ),
+                        ),
+                    ),
+                ),
                 'temperature' => $this->temperature,
+                'stream' => false,
             );
         } else {
             // Chat Completions 请求体保持不变
@@ -336,9 +348,18 @@ class SpamJudge_API_Client {
             return '';
         }
 
-        // 全量匹配无需处理的端点
+        // 精确匹配官方路径（无尾斜杠），直接使用
         if ( $this->is_preserved_api_path( $endpoint ) ) {
             return $endpoint;
+        }
+
+        // 若以官方路径加尾斜杠结尾，去掉尾斜杠后返回，避免 404
+        if ( $this->ends_with( $endpoint, '/v1/chat/completions/' ) ) {
+            return rtrim( $endpoint, '/' );
+        }
+
+        if ( $this->ends_with( $endpoint, '/v1/responses/' ) ) {
+            return rtrim( $endpoint, '/' );
         }
 
         // 去掉末尾的 #，确保不携带片段。
