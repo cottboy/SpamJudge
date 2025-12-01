@@ -60,13 +60,6 @@ class SpamJudge_API_Client {
     private $timeout;
     
     /**
-     * 调试日志文件路径
-     *
-     * @var string
-     */
-    private $debug_log_path;
-    
-    /**
      * 构造函数
      *
      * @param array $settings 设置数组
@@ -79,7 +72,6 @@ class SpamJudge_API_Client {
         $this->temperature = floatval( $settings['temperature'] );
         $this->system_prompt = sanitize_textarea_field( $settings['system_prompt'] );
         $this->timeout = absint( $settings['timeout'] );
-        $this->debug_log_path = trailingslashit( SPAMJUDGE_PLUGIN_DIR ) . 'spamjudge-debug.log';
         
         // 确保温度在有效范围内 (0-2)
         $this->temperature = max( 0, min( 2, $this->temperature ) );
@@ -174,16 +166,6 @@ class SpamJudge_API_Client {
             );
         }
 
-        // 记录请求构造阶段的上下文，便于排查后续异常
-        $this->write_debug_log(
-            'request_prepared',
-            array(
-                'endpoint' => $prepared_endpoint,
-                'is_responses_api' => $is_responses_api,
-                'request_body' => $this->redact_request_body_for_log( $request_body ),
-            )
-        );
-        
         // 发送 API 请求
         $response = wp_remote_post( $prepared_endpoint, array(
             'headers' => array(
@@ -198,12 +180,6 @@ class SpamJudge_API_Client {
         
         // 检查是否有错误
         if ( is_wp_error( $response ) ) {
-            $this->write_debug_log(
-                'request_failed',
-                array(
-                    'reason' => $response->get_error_message(),
-                )
-            );
             return array(
                 'success' => false,
                 'score' => null,
@@ -218,13 +194,6 @@ class SpamJudge_API_Client {
         // 检查状态码
         if ( $status_code !== 200 ) {
             $error_body = wp_remote_retrieve_body( $response );
-            $this->write_debug_log(
-                'response_error',
-                array(
-                    'status_code' => $status_code,
-                    'body_preview' => $this->truncate_for_log( $error_body ),
-                )
-            );
             return array(
                 'success' => false,
                 'score' => null,
@@ -249,25 +218,8 @@ class SpamJudge_API_Client {
             $ai_response = $this->extract_chat_completions_text( $data );
         }
 
-        $this->write_debug_log(
-            'response_parsed',
-            array(
-                'status_code' => $status_code,
-                'raw_body_preview' => $this->truncate_for_log( $body ),
-                'parsed_text_preview' => $this->truncate_for_log( $ai_response ),
-            )
-        );
-
         // 验证响应数据
         if ( $ai_response === null ) {
-            $this->write_debug_log(
-                'response_parse_failed',
-                array(
-                    'status_code' => $status_code,
-                    'parsed_data' => $data,
-                    'is_responses_api' => $is_responses_api,
-                )
-            );
             return array(
                 'success' => false,
                 'score' => null,
@@ -280,12 +232,6 @@ class SpamJudge_API_Client {
         $score = $this->extract_score( $ai_response );
         
         if ( $score === null ) {
-            $this->write_debug_log(
-                'score_parse_failed',
-                array(
-                    'ai_response' => $ai_response,
-                )
-            );
             return array(
                 'success' => false,
                 'score' => null,
@@ -339,7 +285,7 @@ class SpamJudge_API_Client {
      * @return bool
      */
     private function is_responses_endpoint( $endpoint ) {
-        return $this->ends_with( $endpoint, '/v1/responses' );
+        return $this->endpoint_path_ends_with( $endpoint, '/v1/responses' );
     }
 
     /**
@@ -453,156 +399,6 @@ class SpamJudge_API_Client {
     }
 
     /**
-     * 记录调试日志（写入插件目录）
-     *
-     * @param string $context 上下文字段
-     * @param array  $payload 需要写入的详细数据
-     * @return void
-     */
-    private function write_debug_log( $context, $payload ) {
-        // 确保日志路径有效且插件目录可写
-        if ( empty( $this->debug_log_path ) || ! is_string( $this->debug_log_path ) ) {
-            return;
-        }
-
-        $context = sanitize_key( $context );
-        $payload = $this->sanitize_log_payload( $payload );
-
-        $log_entry = array(
-            'timestamp' => current_time( 'mysql' ),
-            'context' => $context,
-            'payload' => $payload,
-        );
-
-        $encoded = wp_json_encode( $log_entry, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
-
-        if ( false === $encoded ) {
-            return;
-        }
-
-        // 保证日志目录存在（插件目录已存在，此调用只在极端情况下创建）
-        wp_mkdir_p( dirname( $this->debug_log_path ) );
-
-        // 使用 FILE_APPEND + LOCK_EX 防止并发写入冲突
-        file_put_contents(
-            $this->debug_log_path,
-            $encoded . PHP_EOL,
-            FILE_APPEND | LOCK_EX
-        );
-    }
-
-    /**
-     * 清理和截断将写入日志的数据，避免注入恶意内容
-     *
-     * @param mixed $data 原始数据
-     * @return mixed 已清理的数据
-     */
-    private function sanitize_log_payload( $data ) {
-        if ( is_array( $data ) ) {
-            $clean = array();
-
-            foreach ( $data as $key => $value ) {
-                $safe_key = is_string( $key ) ? sanitize_key( $key ) : $key;
-                $clean[ $safe_key ] = $this->sanitize_log_payload( $value );
-            }
-
-            return $clean;
-        }
-
-        if ( is_object( $data ) ) {
-            return $this->sanitize_log_payload( (array) $data );
-        }
-
-        if ( is_bool( $data ) || is_int( $data ) || is_float( $data ) ) {
-            return $data;
-        }
-
-        if ( is_string( $data ) ) {
-            $data = wp_strip_all_tags( $data );
-            return $this->truncate_for_log( $data );
-        }
-
-        return $data;
-    }
-
-    /**
-     * 截断日志内容，避免单条记录过长
-     *
-     * @param string|null $value 需要截断的字符串
-     * @param int         $limit 最大长度
-     * @return string|null
-     */
-    private function truncate_for_log( $value, $limit = 600 ) {
-        if ( $value === null ) {
-            return null;
-        }
-
-        $value = (string) $value;
-
-        if ( function_exists( 'mb_strlen' ) && function_exists( 'mb_substr' ) ) {
-            if ( mb_strlen( $value ) <= $limit ) {
-                return $value;
-            }
-
-            return mb_substr( $value, 0, $limit ) . '...';
-        }
-
-        if ( strlen( $value ) <= $limit ) {
-            return $value;
-        }
-
-        return substr( $value, 0, $limit ) . '...';
-    }
-
-    /**
-     * 针对请求体进行遮罩，仅保留排查所需字段
-     *
-     * @param array $request_body 原始请求体
-     * @return array
-     */
-    private function redact_request_body_for_log( $request_body ) {
-        if ( ! is_array( $request_body ) ) {
-            return array();
-        }
-
-        $body = $request_body;
-
-        // 处理 messages / input，避免日志过长
-        $message_keys = array( 'messages', 'input' );
-
-        foreach ( $message_keys as $key ) {
-            if ( isset( $body[ $key ] ) && is_array( $body[ $key ] ) ) {
-                $body[ $key ] = $this->redact_messages_for_log( $body[ $key ] );
-            }
-        }
-
-        return $this->sanitize_log_payload( $body );
-    }
-
-    /**
-     * 避免在日志中记录完整评论内容，仅记录前缀
-     *
-     * @param array $messages 消息数组
-     * @return array
-     */
-    private function redact_messages_for_log( $messages ) {
-        $clean_messages = array();
-
-        foreach ( $messages as $message ) {
-            if ( ! is_array( $message ) ) {
-                continue;
-            }
-
-            $clean_messages[] = array(
-                'role' => isset( $message['role'] ) ? sanitize_key( $message['role'] ) : '',
-                'content_preview' => isset( $message['content'] ) ? $this->truncate_for_log( (string) $message['content'], 200 ) : '',
-            );
-        }
-
-        return $clean_messages;
-    }
-
-    /**
      * 构造最终请求端点
      *
      * - 明确处理以 # 结尾的 URL，防止携带片段
@@ -672,7 +468,7 @@ class SpamJudge_API_Client {
         );
 
         foreach ( $suffixes as $suffix ) {
-            if ( $this->ends_with( $endpoint, $suffix ) ) {
+            if ( $this->endpoint_path_ends_with( $endpoint, $suffix ) ) {
                 return true;
             }
         }
@@ -700,6 +496,37 @@ class SpamJudge_API_Client {
         }
 
         return substr( $haystack, - $needle_length ) === $needle;
+    }
+
+    /**
+     * 判断 URL 的路径部分是否以指定后缀结尾（忽略查询参数）
+     *
+     * @param string $endpoint 待检测的完整端点
+     * @param string $suffix   需要匹配的路径后缀
+     * @return bool
+     */
+    private function endpoint_path_ends_with( $endpoint, $suffix ) {
+        $path = wp_parse_url( $endpoint, PHP_URL_PATH );
+
+        if ( ! is_string( $path ) ) {
+            $path = $endpoint;
+        }
+
+        $normalized_path = rtrim( $path, '/' );
+        $normalized_suffix = rtrim( $suffix, '/' );
+
+        if ( $normalized_suffix === '' ) {
+            return true;
+        }
+
+        $path_length = strlen( $normalized_path );
+        $suffix_length = strlen( $normalized_suffix );
+
+        if ( $suffix_length > $path_length ) {
+            return false;
+        }
+
+        return substr( $normalized_path, - $suffix_length ) === $normalized_suffix;
     }
 }
 
