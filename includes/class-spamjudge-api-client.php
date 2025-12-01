@@ -370,15 +370,12 @@ class SpamJudge_API_Client {
             return null;
         }
 
-        // 首选 output_text 数组
+        // 首选 output_text 字段（官方 SDK 提供的快捷字段），但若内容为空需要继续回退
         if ( isset( $data['output_text'] ) ) {
-            // output_text 可能是字符串或数组，做兼容处理
-            if ( is_string( $data['output_text'] ) ) {
-                return trim( $data['output_text'] );
-            }
+            $normalized_output_text = $this->normalize_responses_text_field( $data['output_text'] );
 
-            if ( is_array( $data['output_text'] ) && isset( $data['output_text'][0] ) && is_string( $data['output_text'][0] ) ) {
-                return trim( $data['output_text'][0] );
+            if ( $normalized_output_text !== '' ) {
+                return $normalized_output_text;
             }
         }
 
@@ -391,14 +388,68 @@ class SpamJudge_API_Client {
 
                 foreach ( $output_item['content'] as $content_item ) {
                     // Responses API 文本内容通常包含 type=output_text 与 text 字段
-                    if ( isset( $content_item['text'] ) && is_string( $content_item['text'] ) ) {
-                        return trim( $content_item['text'] );
+                    if ( isset( $content_item['text'] ) ) {
+                        $normalized_text = $this->normalize_responses_text_field( $content_item['text'] );
+
+                        if ( $normalized_text !== '' ) {
+                            return $normalized_text;
+                        }
                     }
                 }
             }
         }
 
         return null;
+    }
+
+    /**
+     * 将 Responses API 的 text 字段统一转换为字符串
+     *
+     * 兼容以下情况：
+     * - 直接返回字符串
+     * - 返回数组（多个字符串或嵌套数组）
+     * - 返回对象（例如 { value: "...", annotations: [] } 的结构）
+     *
+     * @param mixed $text_field 原始 text 字段
+     * @return string 正常化后的文本，若为空则返回空字符串
+     */
+    private function normalize_responses_text_field( $text_field ) {
+        // 字符串直接去除首尾空白
+        if ( is_string( $text_field ) ) {
+            $sanitized = trim( $text_field );
+            return $sanitized;
+        }
+
+        // 对象转换成数组后统一处理
+        if ( is_object( $text_field ) ) {
+            $text_field = (array) $text_field;
+        }
+
+        // 数组场景需递归提取各项内容
+        if ( is_array( $text_field ) ) {
+            $collected = array();
+
+            foreach ( $text_field as $value ) {
+                if ( isset( $value ) && $value !== '' ) {
+                    $normalized_child = $this->normalize_responses_text_field( $value );
+
+                    if ( $normalized_child !== '' ) {
+                        $collected[] = $normalized_child;
+                    }
+                }
+            }
+
+            if ( ! empty( $collected ) ) {
+                return trim( implode( "\n", $collected ) );
+            }
+
+            // 若数组中存在 value 字段（例如 { value: 'text', annotations: [] }），优先读取
+            if ( isset( $text_field['value'] ) && is_string( $text_field['value'] ) ) {
+                return trim( $text_field['value'] );
+            }
+        }
+
+        return '';
     }
 
     /**
