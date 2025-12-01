@@ -50,7 +50,6 @@ function spamjudge_activate() {
         'api_endpoint' => '',
         'api_key' => '',
         'model_id' => '',
-        'temperature' => 0.1,
         'system_prompt' => 'You are a spam comment detection system. Your ONLY task is to output a single number between 0 and 100.
 
 SCORING RULES:

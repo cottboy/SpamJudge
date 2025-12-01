@@ -92,13 +92,6 @@
                 errorMessages.push(SpamJudge.strings.modelIdEmpty);
             }
 
-            // 验证温度
-            var temperature = parseFloat($('#temperature').val());
-            if (isNaN(temperature) || temperature < 0 || temperature > 2) {
-                isValid = false;
-                errorMessages.push(SpamJudge.strings.temperatureInvalid);
-            }
-
             // 验证系统提示词
             var systemPrompt = $('#system_prompt').val().trim();
             if (!systemPrompt) {

@@ -68,7 +68,6 @@ class SpamJudge {
             'api_endpoint' => '',
             'api_key' => '',
             'model_id' => '',
-            'temperature' => 0.1,
             'system_prompt' => 'You are a spam comment detection system. Your ONLY task is to output a single number between 0 and 100.
 
 SCORING RULES:
@@ -99,6 +98,11 @@ If you output anything other than a single number, the system will fail.',
         );
         
         $this->settings = wp_parse_args( $this->settings, $defaults );
+
+        if ( isset( $this->settings['temperature'] ) ) {
+            unset( $this->settings['temperature'] );
+            update_option( 'spamjudge_settings', $this->settings );
+        }
     }
     
     /**

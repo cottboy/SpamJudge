@@ -102,12 +102,6 @@ class SpamJudge_Admin_Settings {
             $sanitized['model_id'] = sanitize_text_field( $input['model_id'] );
         }
         
-        // 温度
-        if ( isset( $input['temperature'] ) ) {
-            $temperature = floatval( $input['temperature'] );
-            $sanitized['temperature'] = max( 0, min( 2, $temperature ) );
-        }
-        
         // 系统提示词
         if ( isset( $input['system_prompt'] ) ) {
             $sanitized['system_prompt'] = sanitize_textarea_field( $input['system_prompt'] );
@@ -197,7 +191,6 @@ class SpamJudge_Admin_Settings {
                     'apiEndpointInvalid' => __( 'API 端点必须是有效的 URL', 'spamjudge' ),
                     'apiKeyEmpty' => __( 'API 密钥不能为空', 'spamjudge' ),
                     'modelIdEmpty' => __( '模型 ID 不能为空', 'spamjudge' ),
-                    'temperatureInvalid' => __( '温度必须在 0-2 之间', 'spamjudge' ),
                     'systemPromptEmpty' => __( '系统提示词不能为空', 'spamjudge' ),
                     'thresholdInvalid' => __( '分数阈值必须在 0-100 之间', 'spamjudge' ),
                     'timeoutInvalid' => __( '超时时间必须至少为 5 秒', 'spamjudge' ),
@@ -408,21 +401,6 @@ class SpamJudge_Admin_Settings {
                                class="regular-text" required>
                         <p class="description">
                             <?php esc_html_e( '要使用的 AI 模型 ID', 'spamjudge' ); ?>
-                        </p>
-                    </td>
-                </tr>
-                
-                <!-- 温度 -->
-                <tr>
-                    <th scope="row">
-                        <label for="temperature"><?php esc_html_e( '温度', 'spamjudge' ); ?></label>
-                    </th>
-                    <td>
-                        <input type="number" id="temperature" name="spamjudge_settings[temperature]" 
-                               value="<?php echo esc_attr( $settings['temperature'] ?? 0.1 ); ?>" 
-                               min="0" max="2" step="0.1" required>
-                        <p class="description">
-                            <?php esc_html_e( '控制 AI 响应的随机性（0-2，越低越确定）', 'spamjudge' ); ?>
                         </p>
                     </td>
                 </tr>

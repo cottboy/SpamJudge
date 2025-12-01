@@ -75,10 +75,6 @@ msgstr ""
 msgid "模型 ID 不能为空"
 msgstr ""
 
-#: admin/class-admin-settings.php:200
-msgid "温度必须在 0-2 之间"
-msgstr ""
-
 #: admin/class-admin-settings.php:201
 msgid "系统提示词不能为空"
 msgstr ""
@@ -173,14 +169,6 @@ msgstr ""
 
 #: admin/class-admin-settings.php:410
 msgid "要使用的 AI 模型 ID"
-msgstr ""
-
-#: admin/class-admin-settings.php:418
-msgid "温度"
-msgstr ""
-
-#: admin/class-admin-settings.php:425
-msgid "控制 AI 响应的随机性（0-2，越低越确定）"
 msgstr ""
 
 #: admin/class-admin-settings.php:433

@@ -39,13 +39,6 @@ class SpamJudge_API_Client {
     private $model_id;
     
     /**
-     * 温度参数
-     *
-     * @var float
-     */
-    private $temperature;
-    
-    /**
      * 系统提示词
      *
      * @var string
@@ -69,12 +62,8 @@ class SpamJudge_API_Client {
         $this->api_endpoint = esc_url_raw( $settings['api_endpoint'] );
         $this->api_key = sanitize_text_field( $settings['api_key'] );
         $this->model_id = sanitize_text_field( $settings['model_id'] );
-        $this->temperature = floatval( $settings['temperature'] );
         $this->system_prompt = sanitize_textarea_field( $settings['system_prompt'] );
         $this->timeout = absint( $settings['timeout'] );
-        
-        // 确保温度在有效范围内 (0-2)
-        $this->temperature = max( 0, min( 2, $this->temperature ) );
         
         // 确保超时时间至少为 5 秒
         $this->timeout = max( 5, $this->timeout );
@@ -145,7 +134,6 @@ class SpamJudge_API_Client {
                 'model' => $this->model_id,
                 // 使用 messages 风格的 input，兼容要求 system 角色提示词的供应商
                 'input' => $input_messages,
-                'temperature' => $this->temperature,
                 'stream' => false,
             );
         } else {
@@ -162,7 +150,6 @@ class SpamJudge_API_Client {
                         'content' => $user_message,
                     ),
                 ),
-                'temperature' => $this->temperature,
             );
         }
 

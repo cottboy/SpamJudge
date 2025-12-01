@@ -76,10 +76,6 @@ msgstr "The API key cannot be empty"
 msgid "模型 ID 不能为空"
 msgstr "The Model ID cannot be empty"
 
-#: admin/class-admin-settings.php:200
-msgid "温度必须在 0-2 之间"
-msgstr "The temperature must be between 0 and 2"
-
 #: admin/class-admin-settings.php:201
 msgid "系统提示词不能为空"
 msgstr "The system prompt cannot be left blank"
@@ -175,14 +171,6 @@ msgstr "Model ID"
 #: admin/class-admin-settings.php:410
 msgid "要使用的 AI 模型 ID"
 msgstr "The AI model ID to be used"
-
-#: admin/class-admin-settings.php:418
-msgid "温度"
-msgstr "Temperature"
-
-#: admin/class-admin-settings.php:425
-msgid "控制 AI 响应的随机性（0-2，越低越确定）"
-msgstr "Control the randomness of AI responses (0-2, lower values indicate greater certainty)"
 
 #: admin/class-admin-settings.php:433
 msgid "系统提示词"
