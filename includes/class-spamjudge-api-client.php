@@ -416,16 +416,7 @@ class SpamJudge_API_Client {
 
         // 精确匹配官方路径（无尾斜杠），直接使用
         if ( $this->is_preserved_api_path( $endpoint ) ) {
-            return $endpoint;
-        }
-
-        // 若以官方路径加尾斜杠结尾，去掉尾斜杠后返回，避免 404
-        if ( $this->ends_with( $endpoint, '/v1/chat/completions/' ) ) {
-            return rtrim( $endpoint, '/' );
-        }
-
-        if ( $this->ends_with( $endpoint, '/v1/responses/' ) ) {
-            return rtrim( $endpoint, '/' );
+            return $this->normalize_preserved_endpoint( $endpoint );
         }
 
         // 去掉末尾的 #，确保不携带片段。
@@ -474,6 +465,35 @@ class SpamJudge_API_Client {
         }
 
         return false;
+    }
+
+    /**
+     * 规范化官方端点格式（移除多余斜杠但保留查询/片段）
+     *
+     * @param string $endpoint 原始端点
+     * @return string
+     */
+    private function normalize_preserved_endpoint( $endpoint ) {
+        $endpoint = trim( $endpoint );
+
+        if ( $endpoint === '' ) {
+            return '';
+        }
+
+        $endpoint_length = strlen( $endpoint );
+        $delimiter_position = strcspn( $endpoint, '?#' );
+
+        if ( $delimiter_position >= $endpoint_length ) {
+            $base_path = $endpoint;
+            $suffix = '';
+        } else {
+            $base_path = substr( $endpoint, 0, $delimiter_position );
+            $suffix = substr( $endpoint, $delimiter_position );
+        }
+
+        $base_path = rtrim( $base_path, '/' );
+
+        return $base_path . $suffix;
     }
 
     /**
