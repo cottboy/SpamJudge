@@ -114,25 +114,34 @@ class SpamJudge_API_Client {
             /**
              * Responses API 请求体
              *
-             * - 按官方规范使用 role/content 结构的 input（参考 v1/responses 文档）
-             * - 明确传递 system 与 user 两条消息，避免部分兼容实现忽略 instructions 导致提示词失效
-             * - 保持温度与非流式设置一致，避免行为差异
+             * - content 必须是带有 type 的数组（官方规范要求）
+             * - 明确传递 system 与 user 两条消息，避免部分兼容实现忽略 instructions
              * - 仅传递文本输入，满足当前评分需求
              */
             $input_messages = array(
                 array(
                     'role'    => 'system',
-                    'content' => $this->system_prompt,
+                    'content' => array(
+                        array(
+                            'type' => 'input_text',
+                            'text' => $this->system_prompt,
+                        ),
+                    ),
                 ),
                 array(
                     'role'    => 'user',
-                    'content' => $user_message,
+                    'content' => array(
+                        array(
+                            'type' => 'input_text',
+                            'text' => $user_message,
+                        ),
+                    ),
                 ),
             );
 
             $request_body = array(
                 'model' => $this->model_id,
-                // 使用 messages 风格的 input，兼容要求 system 角色提示词的供应商
+                // 使用 messages 风格的 input，兼容要求严格遵守 schema 的供应商
                 'input' => $input_messages,
                 'stream' => false,
             );
