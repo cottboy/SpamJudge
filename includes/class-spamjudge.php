@@ -99,10 +99,23 @@ If you output anything other than a single number, the system will fail.',
         
         $this->settings = wp_parse_args( $this->settings, $defaults );
 
+
+
+        /**
+         * - 旧版本会存储 temperature 字段，现已弃用。
+         * - 这里在每次读取设置时自动删掉该字段并立即写回数据库。
+         */
         if ( isset( $this->settings['temperature'] ) ) {
             unset( $this->settings['temperature'] );
             update_option( 'spamjudge_settings', $this->settings );
         }
+        /**
+         * - 旧版本会存储 temperature 字段，现已弃用。
+         * - 这里在每次读取设置时自动删掉该字段并立即写回数据库。
+         */
+
+
+
     }
     
     /**
