@@ -2,8 +2,8 @@
 Contributors: cottboy
 Tags: ai, llm, spam, spam-comments, anti-spam
 Requires at least: 5.0
-Tested up to: 6.8
-Stable tag: 1.0.0
+Tested up to: 6.9
+Stable tag: 1.1.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -17,6 +17,7 @@ SpamJudge 使用 AI 大模型自动检测和过滤垃圾评论。
 = 特征 =
 
 * 支持任何兼容 OpenAI 格式的 API
+* 支持/v1/chat/completions和/v1/responses端点
 * 自定义 AI 提示词，根据网站特点调整评分标准
 * 可配置的分数阈值，灵活控制过滤强度
 * 详细的日志记录，追踪每条评论的处理过程
@@ -98,10 +99,6 @@ If you output anything other than a single number, the system will fail.
 
 增加3秒左右，具体根据使用的服务提供商以及模型有关，使用非思考模型可有效降低等待时间。
 
-= 所有选项都配置好了，依旧请求失败怎么办？ =
-
-请检查 API 端点后面是否添加了/v1/chat/completions。
-
 == Screenshots ==
 
 1. 日志界面
@@ -109,10 +106,15 @@ If you output anything other than a single number, the system will fail.
 
 == Changelog ==
 
+= 1.1.0（2025-12-03） =
+* 兼容/v1/responses端点
+* 端点URL自动补全
+* 弃用“温度”
+
 = 1.0.0（2025-11-01） =
-首个版本发布
+* 首个版本
 
 == Upgrade Notice ==
 
-= 1.0.0 =
-首个版本发布
+= 1.1.0 =
+兼容/v1/responses端点，端点URL自动补全，弃用“温度”。

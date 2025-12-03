@@ -365,7 +365,7 @@ class SpamJudge_Admin_Settings {
                                value="<?php echo esc_attr( $settings['api_endpoint'] ?? '' ); ?>" 
                                class="regular-text" required>
                         <p class="description">
-                            <?php esc_html_e( 'OpenAI 格式的 API 端点地址', 'spamjudge' ); ?>
+                            <?php esc_html_e( 'OpenAI 格式的 API 端点地址，自动补全 /v1/chat/completions，/ 结尾忽略 v1，# 结尾不补全', 'spamjudge' ); ?>
                         </p>
                     </td>
                 </tr>

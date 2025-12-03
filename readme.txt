@@ -2,8 +2,8 @@
 Contributors: cottboy
 Tags: ai, llm, spam, spam-comments, anti-spam
 Requires at least: 5.0
-Tested up to: 6.8
-Stable tag: 1.0.0
+Tested up to: 6.9
+Stable tag: 1.1.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -17,6 +17,7 @@ SpamJudge uses AI large language models to automatically detect and filter spam 
 = Features =
 
 * Supports any API compatible with the OpenAI format
+* Supports both /v1/chat/completions and /v1/response endpoints
 * Customizable AI prompts to adjust scoring criteria based on the characteristics of the website
 * Configurable score thresholds for flexible control over filtering intensity
 * Detailed logging to track the processing of each comment
@@ -98,10 +99,6 @@ Comment data will be sent to the API you configure for scoring. Make sure to use
 
 It adds about 3 seconds, depending on the service provider and model used. Using a non-thinking model can effectively reduce wait time.
 
-= What should I do if the request still fails after all options are configured? =
-
-Check whether /v1/chat/completions is added after the API endpoint.
-
 == Screenshots ==
 
 1. Log interface
@@ -109,10 +106,15 @@ Check whether /v1/chat/completions is added after the API endpoint.
 
 == Changelog ==
 
+= 1.1.0（2025-12-03） =
+* Compatible with the /v1/responses endpoint
+* Endpoint URL auto-completion
+* Deprecation of "temperature"
+
 = 1.0.0（2025-11-01） =
-First version released
+* First version
 
 == Upgrade Notice ==
 
 = 1.0.0 =
-First version released
+Compatible with the /v1/responses endpoint, endpoint URL auto-completion, deprecation of "temperature".

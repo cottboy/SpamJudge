@@ -2,7 +2,7 @@
 /**
  * Plugin Name: SpamJudge
  * Description: Using AI large language models to automatically detect and filter spam comments.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: cottboy
  * Author URI: https://www.joyfamily.top/
  * License: GPLv3 or later
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // 定义插件常量
-define( 'SPAMJUDGE_VERSION', '1.0.0' );
+define( 'SPAMJUDGE_VERSION', '1.1.0' );
 define( 'SPAMJUDGE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SPAMJUDGE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'SPAMJUDGE_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
