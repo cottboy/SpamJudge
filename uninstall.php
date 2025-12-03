@@ -18,10 +18,11 @@ global $wpdb;
 delete_option( 'spamjudge_settings' );
 
 // 删除日志表（包含所有日志数据）
-$table_name = $wpdb->prefix . 'spamjudge_logs';
+// 构建日志表名，使用数据库前缀并通过 esc_sql 转义，确保在直接 SQL 中使用时安全
+$spamjudge_logs_table = esc_sql( $wpdb->prefix . 'spamjudge_logs' );
 // 卸载时删除自定义表（WordPress 官方文档推荐做法）
 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- 卸载时清理自定义表，表名固定安全
-$wpdb->query( "DROP TABLE IF EXISTS {$table_name}" );
+$wpdb->query( "DROP TABLE IF EXISTS {$spamjudge_logs_table}" );
 
 // 清除定时任务
 wp_clear_scheduled_hook( 'spamjudge_cleanup_logs' );
