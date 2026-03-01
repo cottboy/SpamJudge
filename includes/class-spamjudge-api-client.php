@@ -79,13 +79,11 @@ class SpamJudge_API_Client {
         $this->system_prompt = sanitize_textarea_field( $settings['system_prompt'] );
         $this->timeout = absint( $settings['timeout'] );
 
-        // Claude API 版本头：未配置时使用官方稳定版本
-        $configured_anthropic_version = isset( $settings['anthropic_version'] ) ? sanitize_text_field( $settings['anthropic_version'] ) : '';
-        $this->anthropic_version = $configured_anthropic_version !== '' ? $configured_anthropic_version : '2023-06-01';
+        // Claude API 版本头固定写死，避免外部配置带来不一致行为
+        $this->anthropic_version = '2023-06-01';
 
-        // Claude max_tokens：未配置时使用安全默认值，避免请求缺失必填字段
-        $configured_claude_max_tokens = isset( $settings['claude_max_tokens'] ) ? absint( $settings['claude_max_tokens'] ) : 0;
-        $this->claude_max_tokens = $configured_claude_max_tokens > 0 ? $configured_claude_max_tokens : 64;
+        // Claude max_tokens 固定写死，避免外部配置影响审核稳定性
+        $this->claude_max_tokens = 64;
         
         // 确保超时时间至少为 5 秒
         $this->timeout = max( 5, $this->timeout );
