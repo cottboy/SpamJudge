@@ -365,7 +365,7 @@ class SpamJudge_Admin_Settings {
                                value="<?php echo esc_attr( $settings['api_endpoint'] ?? '' ); ?>" 
                                class="regular-text" required>
                         <p class="description">
-                            <?php esc_html_e( '支持 OpenAI 与 Claude。默认自动补全 /v1/chat/completions；若使用 Claude 请填写 /v1/messages；# 结尾表示禁用自动补全', 'spamjudge' ); ?>
+                            <?php esc_html_e( '支持 OpenAI 与 Claude，默认自动补全 /v1/chat/completions，若使用 Claude 请填写 /v1/messages，# 结尾表示禁用自动补全', 'spamjudge' ); ?>
                         </p>
                     </td>
                 </tr>

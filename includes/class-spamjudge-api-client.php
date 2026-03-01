@@ -79,10 +79,10 @@ class SpamJudge_API_Client {
         $this->system_prompt = sanitize_textarea_field( $settings['system_prompt'] );
         $this->timeout = absint( $settings['timeout'] );
 
-        // Claude API 版本头固定写死，避免外部配置带来不一致行为
+        // Claude API 版本头固定写死
         $this->anthropic_version = '2023-06-01';
 
-        // Claude max_tokens 固定写死，避免外部配置影响审核稳定性
+        // Claude max_tokens 固定写死
         $this->claude_max_tokens = 64;
         
         // 确保超时时间至少为 5 秒
