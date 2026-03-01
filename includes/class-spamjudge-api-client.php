@@ -397,7 +397,7 @@ class SpamJudge_API_Client {
     /**
      * 构造最终请求端点
      *
-     * - 明确处理以 # 结尾的 URL，防止携带片段
+     * - 以 # 结尾视为“禁止自动补全”开关，请求前移除 #
      * - 兼容用户未写版本路径的情况，自动补全 chat completions 端点
      * - 对已指向 /v1/chat/completions 或 /v1/responses 的 URL 保持不变
      *
@@ -410,22 +410,21 @@ class SpamJudge_API_Client {
             return '';
         }
 
-        // 精确匹配官方路径（无尾斜杠），直接使用
-        if ( $this->is_preserved_api_path( $endpoint ) ) {
-            return $this->normalize_preserved_endpoint( $endpoint );
-        }
-
-        // 去掉末尾的 #，确保不携带片段。
+        // 用户以 # 结尾表示“不要自动补全”，仅移除 # 后直接返回。
+        // 例如：https://example.com/custom/path# -> https://example.com/custom/path
         if ( substr( $endpoint, -1 ) === '#' ) {
-            $endpoint = rtrim( $endpoint, '# ' );
+            $endpoint_without_flag = rtrim( $endpoint, '# ' );
 
-            if ( $endpoint === '' ) {
+            if ( $endpoint_without_flag === '' ) {
                 return '';
             }
 
-            if ( $this->is_preserved_api_path( $endpoint ) ) {
-                return $endpoint;
-            }
+            return $endpoint_without_flag;
+        }
+
+        // 精确匹配官方路径（无尾斜杠），直接使用
+        if ( $this->is_preserved_api_path( $endpoint ) ) {
+            return $this->normalize_preserved_endpoint( $endpoint );
         }
 
         // 以 /v1 结尾 → 拼接 /chat/completions，避免重复附加版本前缀
