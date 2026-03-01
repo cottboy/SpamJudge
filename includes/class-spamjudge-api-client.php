@@ -2,7 +2,7 @@
 /**
  * API 客户端类
  * 
- * 负责与 OpenAI 格式的 API 进行通信
+ * 负责与 OpenAI / Claude API 进行通信
  *
  * @package SpamJudge
  */
@@ -51,6 +51,20 @@ class SpamJudge_API_Client {
      * @var int
      */
     private $timeout;
+
+    /**
+     * Claude API 版本头
+     *
+     * @var string
+     */
+    private $anthropic_version;
+
+    /**
+     * Claude 最大输出 Token
+     *
+     * @var int
+     */
+    private $claude_max_tokens;
     
     /**
      * 构造函数
@@ -64,6 +78,14 @@ class SpamJudge_API_Client {
         $this->model_id = sanitize_text_field( $settings['model_id'] );
         $this->system_prompt = sanitize_textarea_field( $settings['system_prompt'] );
         $this->timeout = absint( $settings['timeout'] );
+
+        // Claude API 版本头：未配置时使用官方稳定版本
+        $configured_anthropic_version = isset( $settings['anthropic_version'] ) ? sanitize_text_field( $settings['anthropic_version'] ) : '';
+        $this->anthropic_version = $configured_anthropic_version !== '' ? $configured_anthropic_version : '2023-06-01';
+
+        // Claude max_tokens：未配置时使用安全默认值，避免请求缺失必填字段
+        $configured_claude_max_tokens = isset( $settings['claude_max_tokens'] ) ? absint( $settings['claude_max_tokens'] ) : 0;
+        $this->claude_max_tokens = $configured_claude_max_tokens > 0 ? $configured_claude_max_tokens : 64;
         
         // 确保超时时间至少为 5 秒
         $this->timeout = max( 5, $this->timeout );
@@ -108,9 +130,32 @@ class SpamJudge_API_Client {
 
         // 判定当前请求是否指向 /v1/responses 端点（使用已补全后的端点判断，避免误差）
         $is_responses_api = $this->is_responses_endpoint( $prepared_endpoint );
+        // 判定当前请求是否指向 Claude Messages API
+        $is_claude_api = $this->is_claude_messages_endpoint( $prepared_endpoint );
 
-        // 构建请求体：区分 Chat Completions 与 Responses API
-        if ( $is_responses_api ) {
+        // 构建请求体：区分 Claude / Responses / Chat Completions 三类端点
+        if ( $is_claude_api ) {
+            /**
+             * Claude Messages API 请求体
+             *
+             * - model、max_tokens、messages 为必填字段
+             * - system 为可选字段，存在时传入以复用当前插件的系统提示词
+             */
+            $request_body = array(
+                'model' => $this->model_id,
+                'max_tokens' => $this->claude_max_tokens,
+                'messages' => array(
+                    array(
+                        'role' => 'user',
+                        'content' => $user_message,
+                    ),
+                ),
+            );
+
+            if ( $this->system_prompt !== '' ) {
+                $request_body['system'] = $this->system_prompt;
+            }
+        } elseif ( $is_responses_api ) {
             /**
              * Responses API 请求体
              *
@@ -164,11 +209,7 @@ class SpamJudge_API_Client {
 
         // 发送 API 请求
         $response = wp_remote_post( $prepared_endpoint, array(
-            'headers' => array(
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $this->api_key,
-                'User-Agent' => 'SpamJudge WordPress Plugin', // 自定义 User-Agent 标识
-            ),
+            'headers' => $this->build_request_headers( $is_claude_api ),
             'body' => wp_json_encode( $request_body ),
             'timeout' => $this->timeout,
             'sslverify' => true, // 安全性：验证 SSL 证书
@@ -208,7 +249,9 @@ class SpamJudge_API_Client {
         $data = json_decode( $body, true );
 
         // 针对不同端点执行响应提取
-        if ( $is_responses_api ) {
+        if ( $is_claude_api ) {
+            $ai_response = $this->extract_claude_messages_text( $data );
+        } elseif ( $is_responses_api ) {
             $ai_response = $this->extract_responses_api_text( $data );
         } else {
             $ai_response = $this->extract_chat_completions_text( $data );
@@ -275,6 +318,29 @@ class SpamJudge_API_Client {
     }
 
     /**
+     * 按端点类型构建请求头
+     *
+     * @param bool $is_claude_api 是否为 Claude Messages API
+     * @return array
+     */
+    private function build_request_headers( $is_claude_api ) {
+        $headers = array(
+            'Content-Type' => 'application/json',
+            'User-Agent' => 'SpamJudge WordPress Plugin',
+        );
+
+        // Claude 使用 x-api-key 与 anthropic-version；其他端点继续使用 Bearer 认证
+        if ( $is_claude_api ) {
+            $headers['x-api-key'] = $this->api_key;
+            $headers['anthropic-version'] = $this->anthropic_version;
+        } else {
+            $headers['Authorization'] = 'Bearer ' . $this->api_key;
+        }
+
+        return $headers;
+    }
+
+    /**
      * 判定是否为 /v1/responses 端点
      *
      * @param string $endpoint 已补全后的端点
@@ -282,6 +348,16 @@ class SpamJudge_API_Client {
      */
     private function is_responses_endpoint( $endpoint ) {
         return $this->endpoint_path_ends_with( $endpoint, '/v1/responses' );
+    }
+
+    /**
+     * 判定是否为 Claude /v1/messages 端点
+     *
+     * @param string $endpoint 已补全后的端点
+     * @return bool
+     */
+    private function is_claude_messages_endpoint( $endpoint ) {
+        return $this->endpoint_path_ends_with( $endpoint, '/v1/messages' );
     }
 
     /**
@@ -296,6 +372,40 @@ class SpamJudge_API_Client {
         }
 
         return trim( $data['choices'][0]['message']['content'] );
+    }
+
+    /**
+     * 提取 Claude Messages API 响应中的文本
+     *
+     * @param array $data 解码后的响应数据
+     * @return string|null
+     */
+    private function extract_claude_messages_text( $data ) {
+        if ( ! is_array( $data ) || ! isset( $data['content'] ) || ! is_array( $data['content'] ) ) {
+            return null;
+        }
+
+        foreach ( $data['content'] as $content_item ) {
+            if ( ! is_array( $content_item ) ) {
+                continue;
+            }
+
+            if ( ! isset( $content_item['type'] ) || $content_item['type'] !== 'text' ) {
+                continue;
+            }
+
+            if ( ! isset( $content_item['text'] ) || ! is_string( $content_item['text'] ) ) {
+                continue;
+            }
+
+            $normalized_text = trim( $content_item['text'] );
+
+            if ( $normalized_text !== '' ) {
+                return $normalized_text;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -399,7 +509,7 @@ class SpamJudge_API_Client {
      *
      * - 以 # 结尾视为“禁止自动补全”开关，请求前移除 #
      * - 兼容用户未写版本路径的情况，自动补全 chat completions 端点
-     * - 对已指向 /v1/chat/completions 或 /v1/responses 的 URL 保持不变
+     * - 对已指向 /v1/chat/completions、/v1/responses、/v1/messages 的 URL 保持不变
      *
      * @return string 构造后的端点
      */
@@ -451,6 +561,7 @@ class SpamJudge_API_Client {
         $suffixes = array(
             '/v1/chat/completions',
             '/v1/responses',
+            '/v1/messages',
         );
 
         foreach ( $suffixes as $suffix ) {
