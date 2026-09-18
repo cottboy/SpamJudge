@@ -123,7 +123,7 @@ If you output anything other than a single number, the system will fail.',
         // 创建 AI 检测客户端
         $api_client = new SpamJudge_API_Client( $this->settings );
 
-        // 如果站点未配置任何支持文本生成的 AI 供应商（在"设置 → AI 凭据"中配置），跳过检查
+        // 如果站点未配置任何 AI 供应商凭据（在"设置 → 连接"中配置），跳过检查
         if ( ! $api_client->is_supported() ) {
             return $commentdata;
         }

@@ -369,11 +369,11 @@ class SpamJudge_Admin_Settings {
                 </p></div>
             <?php elseif ( ! $ai_supported ) : ?>
                 <div class="notice notice-warning"><p>
-                    <?php esc_html_e( '尚未配置 AI 供应商凭据，评论检测功能暂不生效。请前往后台“设置 → AI 凭据”页面配置至少一个支持文本生成的 AI 供应商。', 'spamjudge' ); ?>
+                    <?php esc_html_e( '尚未配置 AI 供应商凭据，评论检测功能暂不生效。请前往后台“设置 → 连接”页面配置至少一个 AI 供应商。', 'spamjudge' ); ?>
                 </p></div>
             <?php else : ?>
                 <div class="notice notice-info"><p>
-                    <?php esc_html_e( '本插件通过 WordPress 内置 AI Client 调用 AI，无需单独配置 API 端点或密钥。AI 供应商凭据可在后台“设置 → AI 凭据”页面统一管理。', 'spamjudge' ); ?>
+                    <?php esc_html_e( '本插件通过 WordPress 内置 AI Client 调用 AI，无需单独配置 API 端点或密钥。AI 供应商凭据可在后台“设置 → 连接”页面统一管理。', 'spamjudge' ); ?>
                 </p></div>
             <?php endif; ?>
 
@@ -395,7 +395,7 @@ class SpamJudge_Admin_Settings {
                             <?php endforeach; ?>
                         </select>
                         <p class="description">
-                            <?php esc_html_e( '选择用于评论评分的 AI 提供商，仅列出已配置凭据且支持文本生成的提供商', 'spamjudge' ); ?>
+                            <?php esc_html_e( '选择用于评论评分的 AI 提供商，仅列出已配置凭据的提供商', 'spamjudge' ); ?>
                         </p>
                     </td>
                 </tr>

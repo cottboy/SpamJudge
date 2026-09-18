@@ -17,7 +17,7 @@ SpamJudge uses AI large language models to automatically detect and filter spam 
 = Features =
 
 * Powered by the built-in WordPress AI Client (WordPress 7.0+), no need to configure API endpoints or keys in the plugin
-* AI provider credentials are managed centrally by WordPress under "Settings → AI Credentials"
+* AI provider credentials are managed centrally by WordPress under "Settings → Connectors"
 * Customizable AI prompts to adjust scoring criteria based on the characteristics of the website
 * Configurable score thresholds for flexible control over filtering intensity
 * Detailed logging to track the processing of each comment
@@ -93,7 +93,7 @@ The plugin itself is free, but the AI provider you configure in WordPress requir
 
 = Where do I configure the AI provider? =
 
-Go to "Settings → AI Credentials" in the WordPress admin dashboard and configure at least one AI provider that supports text generation. No provider settings are needed inside the plugin itself.
+Go to "Settings → Connectors" in the WordPress admin dashboard and configure at least one AI provider. No provider settings are needed inside the plugin itself.
 
 = Where will the comment data be sent? =
 
@@ -112,7 +112,7 @@ It adds about 3 seconds, depending on the service provider and model used. Using
 
 = 2.0.0（2026-09-19） =
 * Switched to the built-in WordPress AI Client (WordPress 7.0+), no more provider/endpoint/key settings in the plugin
-* AI provider credentials are now managed by WordPress under "Settings → AI Credentials"
+* AI provider credentials are now managed by WordPress under "Settings → Connectors"
 
 = 1.1.0（2025-12-03） =
 * Compatible with the /v1/responses endpoint
@@ -125,4 +125,4 @@ It adds about 3 seconds, depending on the service provider and model used. Using
 == Upgrade Notice ==
 
 = 2.0.0 =
-Requires WordPress 7.0+. The plugin now uses the built-in WordPress AI Client; configure your AI provider under "Settings → AI Credentials".
+Requires WordPress 7.0+. The plugin now uses the built-in WordPress AI Client; configure your AI provider under "Settings → Connectors".

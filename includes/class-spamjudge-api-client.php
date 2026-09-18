@@ -3,7 +3,7 @@
  * AI 检测客户端类
  *
  * 通过 WordPress 7.0 内置的 AI Client（wp_ai_client_prompt()）与 AI 模型通信。
- * 供应商、API 端点与密钥均由 WordPress 统一管理（后台"设置 → AI 凭据"），
+ * 供应商、API 端点与密钥均由 WordPress 统一管理（后台"设置 → 连接"），
  * 插件本身不再单独配置任何供应商信息。
  *
  * @package SpamJudge
@@ -15,8 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WordPress\AiClient\Providers\Http\DTO\RequestOptions;
-use WordPress\AiClient\Providers\Models\DTO\ModelRequirements;
-use WordPress\AiClient\Providers\Models\Enums\CapabilityEnum;
 
 /**
  * AI 检测客户端类
@@ -62,38 +60,51 @@ class SpamJudge_API_Client {
     /**
      * 获取当前站点可用的 AI 提供商列表
      *
-     * 仅返回已配置凭据且支持文本生成的提供商，供设置页下拉框使用。
-     * WordPress 版本低于 7.0（无内置 AI Client）时返回空数组。
+     * 仅返回已配置凭据的提供商，供设置页下拉框与能力检测使用。
+     * 凭据判断基于 AI Client 注册表中已注入的请求认证，均为零成本本地检查，
+     * 不会发起任何 API 请求（注意：不要用 isProviderConfigured()，它会发起真实的测试请求）。
+     * 覆盖的凭据来源：
+     * - WordPress 后台"设置 → 连接"页面存储的 API 密钥（核心在 init 优先级 20 时注入注册表）
+     * - 环境变量或 PHP 常量（SDK 注册提供商时会自动读取同名的 {PROVIDER_ID}_API_KEY）
+     * - 第三方插件自行调用 setProviderRequestAuthentication() 注入的请求认证
      *
      * @return array 以提供商 ID 为键、显示名称为值的数组
      */
     public static function get_available_providers() {
+        // 同一请求内缓存结果，避免重复遍历注册表
+        static $cache = null;
+
+        if ( is_array( $cache ) ) {
+            return $cache;
+        }
+
+        $cache = array();
+
         // WordPress 内置 AI Client 不可用时直接返回空列表
         if ( ! function_exists( 'wp_ai_client_prompt' ) ) {
-            return array();
+            return $cache;
         }
 
-        $registry = \WordPress\AiClient\AiClient::defaultRegistry();
+        try {
+            $registry = \WordPress\AiClient\AiClient::defaultRegistry();
 
-        // 只筛选支持文本生成能力的提供商（本插件只需要文本评分）
-        $requirements = new ModelRequirements(
-            array( CapabilityEnum::textGeneration() ),
-            array()
-        );
+            foreach ( $registry->getRegisteredProviderIds() as $provider_id ) {
+                // 注册表中已存在请求认证实例即视为已配置凭据
+                if ( $registry->getProviderRequestAuthentication( $provider_id ) === null ) {
+                    continue;
+                }
 
-        $providers = array();
+                // 获取提供商显示名称，缺失时以首字母大写的 ID 兜底
+                $class_name = $registry->getProviderClassName( $provider_id );
+                $name = $class_name::metadata()->getName();
 
-        foreach ( $registry->findModelsMetadataForSupport( $requirements ) as $provider_models ) {
-            $metadata = $provider_models->getProvider();
-            $provider_id = $metadata->getId();
-
-            // 仅列出已配置凭据的提供商，未配置的选择了也无法工作
-            if ( $registry->isProviderConfigured( $provider_id ) ) {
-                $providers[ $provider_id ] = $metadata->getName();
+                $cache[ $provider_id ] = $name !== '' ? $name : ucwords( $provider_id );
             }
+        } catch ( \Exception $e ) {
+            // 注册表操作出现异常时，返回已收集到的结果
         }
 
-        return $providers;
+        return $cache;
     }
 
     /**
@@ -103,7 +114,7 @@ class SpamJudge_API_Client {
      * 确保能力检测与实际请求使用相同的提供商配置
      *
      * @param string $text 用户消息文本
-     * @return WordPress\AI_Client\Builders\Prompt_Builder_With_WP_Error
+     * @return WP_AI_Client_Prompt_Builder WordPress 内置 AI Client 的提示词构建器
      */
     private function build_prompt( $text ) {
         $builder = wp_ai_client_prompt()
@@ -120,14 +131,20 @@ class SpamJudge_API_Client {
     /**
      * 检测当前站点是否支持 AI 文本生成
      *
-     * 基于 WordPress 内置 AI Client 的能力检测，纯本地判断，不产生任何 API 请求。
+     * 基于已配置凭据的提供商列表进行判断，纯本地检查，不产生任何 API 请求。
      * 若设置了指定提供商，则只检测该提供商；否则检测任意已配置的提供商。
      *
      * @return bool
      */
     public function is_supported() {
-        return $this->build_prompt( 'test' )
-            ->is_supported_for_text_generation();
+        $providers = self::get_available_providers();
+
+        // 设置了指定提供商时，只检测该提供商是否可用
+        if ( $this->provider_id !== '' ) {
+            return array_key_exists( $this->provider_id, $providers );
+        }
+
+        return ! empty( $providers );
     }
 
     /**

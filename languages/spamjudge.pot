@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SpamJudge 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-19 01:50+0800\n"
+"POT-Creation-Date: 2026-09-19 02:03+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,14 +111,14 @@ msgstr ""
 
 #: admin/class-admin-settings.php:372
 msgid ""
-"尚未配置 AI 供应商凭据，评论检测功能暂不生效。请前往后台“设置 → AI 凭据”页面"
-"配置至少一个支持文本生成的 AI 供应商。"
+"尚未配置 AI 供应商凭据，评论检测功能暂不生效。请前往后台“设置 → 连接”页面配置"
+"至少一个 AI 供应商。"
 msgstr ""
 
 #: admin/class-admin-settings.php:376
 msgid ""
 "本插件通过 WordPress 内置 AI Client 调用 AI，无需单独配置 API 端点或密钥。AI "
-"供应商凭据可在后台“设置 → AI 凭据”页面统一管理。"
+"供应商凭据可在后台“设置 → 连接”页面统一管理。"
 msgstr ""
 
 #: admin/class-admin-settings.php:384
@@ -130,7 +130,7 @@ msgid "自动选择（由 WordPress 决定）"
 msgstr ""
 
 #: admin/class-admin-settings.php:398
-msgid "选择用于评论评分的 AI 提供商，仅列出已配置凭据且支持文本生成的提供商"
+msgid "选择用于评论评分的 AI 提供商，仅列出已配置凭据的提供商"
 msgstr ""
 
 #: admin/class-admin-settings.php:406

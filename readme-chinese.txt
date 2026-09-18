@@ -17,7 +17,7 @@ SpamJudge 使用 AI 大模型自动检测和过滤垃圾评论。
 = 特征 =
 
 * 基于 WordPress 内置 AI Client（需 WordPress 7.0+），插件内无需配置 API 端点或密钥
-* AI 供应商凭据由 WordPress 在后台“设置 → AI 凭据”页面统一管理
+* AI 供应商凭据由 WordPress 在后台“设置 → 连接”页面统一管理
 * 自定义 AI 提示词，根据网站特点调整评分标准
 * 可配置的分数阈值，灵活控制过滤强度
 * 详细的日志记录，追踪每条评论的处理过程
@@ -93,7 +93,7 @@ If you output anything other than a single number, the system will fail.
 
 = 在哪里配置 AI 供应商？ =
 
-前往 WordPress 后台“设置 → AI 凭据”页面，配置至少一个支持文本生成的 AI 供应商即可，插件内部无需任何供应商设置。
+前往 WordPress 后台“设置 → 连接”页面，配置至少一个 AI 供应商即可，插件内部无需任何供应商设置。
 
 = 评论数据会被发送到哪里？ =
 
@@ -112,7 +112,7 @@ If you output anything other than a single number, the system will fail.
 
 = 2.0.0（2026-09-19） =
 * 改用 WordPress 内置 AI Client（需 WordPress 7.0+），插件内不再需要配置供应商、端点和密钥
-* AI 供应商凭据改由 WordPress 在后台“设置 → AI 凭据”页面统一管理
+* AI 供应商凭据改由 WordPress 在后台“设置 → 连接”页面统一管理
 
 = 1.1.0（2025-12-03） =
 * 兼容/v1/responses端点
@@ -125,4 +125,4 @@ If you output anything other than a single number, the system will fail.
 == Upgrade Notice ==
 
 = 2.0.0 =
-需要 WordPress 7.0+。插件改用 WordPress 内置 AI Client，请在后台“设置 → AI 凭据”页面配置 AI 供应商。
+需要 WordPress 7.0+。插件改用 WordPress 内置 AI Client，请在后台“设置 → 连接”页面配置 AI 供应商。
