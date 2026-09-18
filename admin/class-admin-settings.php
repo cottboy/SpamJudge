@@ -86,22 +86,7 @@ class SpamJudge_Admin_Settings {
      */
     public function sanitize_settings( $input ) {
         $sanitized = array();
-        
-        // API 端点
-        if ( isset( $input['api_endpoint'] ) ) {
-            $sanitized['api_endpoint'] = esc_url_raw( $input['api_endpoint'] );
-        }
-        
-        // API 密钥
-        if ( isset( $input['api_key'] ) ) {
-            $sanitized['api_key'] = sanitize_text_field( $input['api_key'] );
-        }
-        
-        // 模型 ID
-        if ( isset( $input['model_id'] ) ) {
-            $sanitized['model_id'] = sanitize_text_field( $input['model_id'] );
-        }
-        
+
         // 系统提示词
         if ( isset( $input['system_prompt'] ) ) {
             $sanitized['system_prompt'] = sanitize_textarea_field( $input['system_prompt'] );
@@ -124,10 +109,10 @@ class SpamJudge_Admin_Settings {
             $sanitized['timeout'] = max( 5, absint( $input['timeout'] ) );
         }
         
-        // 超时后的操作
-        if ( isset( $input['timeout_action'] ) ) {
-            $timeout_action = sanitize_text_field( $input['timeout_action'] );
-            $sanitized['timeout_action'] = in_array( $timeout_action, array( 'hold', 'approve' ) ) ? $timeout_action : 'hold';
+        // 检测失败后的操作
+        if ( isset( $input['error_action'] ) ) {
+            $error_action = sanitize_text_field( $input['error_action'] );
+            $sanitized['error_action'] = in_array( $error_action, array( 'hold', 'approve' ) ) ? $error_action : 'hold';
         }
         
         // 日志保留时间
@@ -187,10 +172,6 @@ class SpamJudge_Admin_Settings {
                     'processing' => __( '处理中...', 'spamjudge' ),
                     'clearAllLogs' => __( '清空所有日志', 'spamjudge' ),
                     'validationFailed' => __( '表单验证失败：', 'spamjudge' ),
-                    'apiEndpointEmpty' => __( 'API 端点不能为空', 'spamjudge' ),
-                    'apiEndpointInvalid' => __( 'API 端点必须是有效的 URL', 'spamjudge' ),
-                    'apiKeyEmpty' => __( 'API 密钥不能为空', 'spamjudge' ),
-                    'modelIdEmpty' => __( '模型 ID 不能为空', 'spamjudge' ),
                     'systemPromptEmpty' => __( '系统提示词不能为空', 'spamjudge' ),
                     'thresholdInvalid' => __( '分数阈值必须在 0-100 之间', 'spamjudge' ),
                     'timeoutInvalid' => __( '超时时间必须至少为 5 秒', 'spamjudge' ),
@@ -265,18 +246,17 @@ class SpamJudge_Admin_Settings {
             <table class="wp-list-table widefat fixed striped">
                 <thead>
                     <tr>
-                        <th style="width: 16.66%;"><?php esc_html_e( '评论者', 'spamjudge' ); ?></th>
-                        <th style="width: 16.66%;"><?php esc_html_e( '评论内容', 'spamjudge' ); ?></th>
-                        <th style="width: 16.66%;"><?php esc_html_e( 'API 状态码', 'spamjudge' ); ?></th>
-                        <th style="width: 16.66%;"><?php esc_html_e( 'AI 评分', 'spamjudge' ); ?></th>
-                        <th style="width: 16.66%;"><?php esc_html_e( '执行操作', 'spamjudge' ); ?></th>
-                        <th style="width: 16.66%;"><?php esc_html_e( '时间', 'spamjudge' ); ?></th>
+                        <th style="width: 20%;"><?php esc_html_e( '评论者', 'spamjudge' ); ?></th>
+                        <th style="width: 20%;"><?php esc_html_e( '评论内容', 'spamjudge' ); ?></th>
+                        <th style="width: 20%;"><?php esc_html_e( 'AI 评分', 'spamjudge' ); ?></th>
+                        <th style="width: 20%;"><?php esc_html_e( '执行操作', 'spamjudge' ); ?></th>
+                        <th style="width: 20%;"><?php esc_html_e( '时间', 'spamjudge' ); ?></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if ( empty( $logs ) ) : ?>
                         <tr>
-                            <td colspan="6" style="text-align: center;">
+                            <td colspan="5" style="text-align: center;">
                                 <?php esc_html_e( '暂无日志记录', 'spamjudge' ); ?>
                             </td>
                         </tr>
@@ -293,7 +273,6 @@ class SpamJudge_Admin_Settings {
                                         <?php echo esc_html( $log['comment_content'] ); ?>
                                     </div>
                                 </td>
-                                <td><?php echo $log['api_status_code'] !== null ? esc_html( $log['api_status_code'] ) : '-'; ?></td>
                                 <td><?php echo $log['ai_score'] !== null ? esc_html( $log['ai_score'] ) : '-'; ?></td>
                                 <td>
                                     <?php
@@ -350,61 +329,36 @@ class SpamJudge_Admin_Settings {
         // 获取当前设置
         $settings = get_option( 'spamjudge_settings', array() );
         
+        // 检测 WordPress 内置 AI Client 是否存在（WordPress 7.0+ 才有）
+        $ai_client_exists = function_exists( 'wp_ai_client_prompt' );
+
+        // 检测站点是否已配置支持文本生成的 AI 供应商凭据
+        $ai_supported = false;
+        if ( $ai_client_exists ) {
+            $api_client = new SpamJudge_API_Client( $settings );
+            $ai_supported = $api_client->is_supported();
+        }
+        
         ?>
         <form method="post" action="options.php">
             <?php settings_fields( 'spamjudge_settings_group' ); ?>
-            
+
+            <!-- AI 供应商状态提示：凭据由 WordPress 内置 AI Client 统一管理，插件不再单独配置 -->
+            <?php if ( ! $ai_client_exists ) : ?>
+                <div class="notice notice-error"><p>
+                    <?php esc_html_e( '当前 WordPress 版本没有内置 AI Client，本插件需要 WordPress 7.0 或更高版本才能工作。', 'spamjudge' ); ?>
+                </p></div>
+            <?php elseif ( ! $ai_supported ) : ?>
+                <div class="notice notice-warning"><p>
+                    <?php esc_html_e( '尚未配置 AI 供应商凭据，评论检测功能暂不生效。请前往后台“设置 → AI 凭据”页面配置至少一个支持文本生成的 AI 供应商。', 'spamjudge' ); ?>
+                </p></div>
+            <?php else : ?>
+                <div class="notice notice-info"><p>
+                    <?php esc_html_e( '本插件通过 WordPress 内置 AI Client 调用 AI，无需单独配置 API 端点或密钥。AI 供应商凭据可在后台“设置 → AI 凭据”页面统一管理。', 'spamjudge' ); ?>
+                </p></div>
+            <?php endif; ?>
+
             <table class="form-table">
-                <!-- API 端点 -->
-                <tr>
-                    <th scope="row">
-                        <label for="api_endpoint"><?php esc_html_e( 'API 端点', 'spamjudge' ); ?></label>
-                    </th>
-                    <td>
-                        <input type="url" id="api_endpoint" name="spamjudge_settings[api_endpoint]" 
-                               value="<?php echo esc_attr( $settings['api_endpoint'] ?? '' ); ?>" 
-                               class="regular-text" required>
-                        <p class="description">
-                            <?php esc_html_e( '支持 OpenAI 与 Claude，默认自动补全 /v1/chat/completions，若使用 Claude 请填写 /v1/messages，# 结尾表示禁用自动补全', 'spamjudge' ); ?>
-                        </p>
-                    </td>
-                </tr>
-                
-                <!-- API 密钥 -->
-                <tr>
-                    <th scope="row">
-                        <label for="api_key"><?php esc_html_e( 'API 密钥', 'spamjudge' ); ?></label>
-                    </th>
-                    <td>
-                        <div class="sj-password-wrapper">
-                            <input type="password" id="api_key" name="spamjudge_settings[api_key]" 
-                                   value="<?php echo esc_attr( $settings['api_key'] ?? '' ); ?>" 
-                                   class="regular-text" required>
-                            <button type="button" class="sj-toggle-password" aria-label="<?php esc_attr_e( '切换密钥可见性', 'spamjudge' ); ?>">
-                                <span class="dashicons dashicons-hidden"></span>
-                            </button>
-                        </div>
-                        <p class="description">
-                            <?php esc_html_e( 'API 访问密钥', 'spamjudge' ); ?>
-                        </p>
-                    </td>
-                </tr>
-                
-                <!-- 模型 ID -->
-                <tr>
-                    <th scope="row">
-                        <label for="model_id"><?php esc_html_e( '模型 ID', 'spamjudge' ); ?></label>
-                    </th>
-                    <td>
-                        <input type="text" id="model_id" name="spamjudge_settings[model_id]" 
-                               value="<?php echo esc_attr( $settings['model_id'] ?? '' ); ?>" 
-                               class="regular-text" required>
-                        <p class="description">
-                            <?php esc_html_e( '要使用的 AI 模型 ID', 'spamjudge' ); ?>
-                        </p>
-                    </td>
-                </tr>
-                
                 <!-- 系统提示词 -->
                 <tr>
                     <th scope="row">
@@ -464,27 +418,27 @@ class SpamJudge_Admin_Settings {
                                value="<?php echo esc_attr( $settings['timeout'] ?? 30 ); ?>" 
                                min="5" required>
                         <p class="description">
-                            <?php esc_html_e( 'API 请求超时时间', 'spamjudge' ); ?>
+                            <?php esc_html_e( 'AI 请求超时时间', 'spamjudge' ); ?>
                         </p>
                     </td>
                 </tr>
                 
-                <!-- 超时后的操作 -->
+                <!-- 检测失败后的操作 -->
                 <tr>
                     <th scope="row">
-                        <label for="timeout_action"><?php esc_html_e( '超时后的操作', 'spamjudge' ); ?></label>
+                        <label for="error_action"><?php esc_html_e( '检测失败后的操作', 'spamjudge' ); ?></label>
                     </th>
                     <td>
-                        <select id="timeout_action" name="spamjudge_settings[timeout_action]">
-                            <option value="hold" <?php selected( $settings['timeout_action'] ?? 'hold', 'hold' ); ?>>
+                        <select id="error_action" name="spamjudge_settings[error_action]">
+                            <option value="hold" <?php selected( $settings['error_action'] ?? 'hold', 'hold' ); ?>>
                                 <?php esc_html_e( '移到待审核队列', 'spamjudge' ); ?>
                             </option>
-                            <option value="approve" <?php selected( $settings['timeout_action'] ?? 'hold', 'approve' ); ?>>
+                            <option value="approve" <?php selected( $settings['error_action'] ?? 'hold', 'approve' ); ?>>
                                 <?php esc_html_e( '直接通过', 'spamjudge' ); ?>
                             </option>
                         </select>
                         <p class="description">
-                            <?php esc_html_e( '当 API 超时或返回无效数据时的处理方式', 'spamjudge' ); ?>
+                            <?php esc_html_e( '当 AI 检测失败（超时、未配置供应商、返回无效数据等）时的处理方式', 'spamjudge' ); ?>
                         </p>
                     </td>
                 </tr>

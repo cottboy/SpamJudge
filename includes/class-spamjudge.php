@@ -63,11 +63,8 @@ class SpamJudge {
     private function load_settings() {
         $this->settings = get_option( 'spamjudge_settings', array() );
         
-        // 确保所有必需的设置都存在
+        // 确保所有必需的设置都存在（供应商与密钥由 WordPress 内置 AI Client 管理，插件无需配置）
         $defaults = array(
-            'api_endpoint' => '',
-            'api_key' => '',
-            'model_id' => '',
             'system_prompt' => 'You are a spam comment detection system. Your ONLY task is to output a single number between 0 and 100.
 
 SCORING RULES:
@@ -91,31 +88,13 @@ If you output anything other than a single number, the system will fail.',
             'score_threshold' => 40,
             'spam_action' => 'spam',
             'timeout' => 30,
-            'timeout_action' => 'hold',
+            'error_action' => 'hold',
             'log_retention' => 90,
             'spam_message' => '',
             'error_message' => '',
         );
         
         $this->settings = wp_parse_args( $this->settings, $defaults );
-
-
-
-        /**
-         * - 旧版本会存储 temperature 字段，现已弃用。
-         * - 这里在每次读取设置时自动删掉该字段并立即写回数据库。
-         */
-        if ( isset( $this->settings['temperature'] ) ) {
-            unset( $this->settings['temperature'] );
-            update_option( 'spamjudge_settings', $this->settings );
-        }
-        /**
-         * - 旧版本会存储 temperature 字段，现已弃用。
-         * - 这里在每次读取设置时自动删掉该字段并立即写回数据库。
-         */
-
-
-
     }
     
     /**
@@ -126,8 +105,8 @@ If you output anything other than a single number, the system will fail.',
      */
     public function check_comment( $commentdata ) {
 
-        // 如果 API 配置不完整，跳过检查
-        if ( empty( $this->settings['api_key'] ) || empty( $this->settings['api_endpoint'] ) || empty( $this->settings['model_id'] ) ) {
+        // 如果 WordPress 内置 AI Client 不可用（WordPress 版本低于 7.0），跳过检查
+        if ( ! function_exists( 'wp_ai_client_prompt' ) ) {
             return $commentdata;
         }
 
@@ -140,8 +119,13 @@ If you output anything other than a single number, the system will fail.',
             return $commentdata;
         }
 
-        // 创建 AI API 客户端
+        // 创建 AI 检测客户端
         $api_client = new SpamJudge_API_Client( $this->settings );
+
+        // 如果站点未配置任何支持文本生成的 AI 供应商（在"设置 → AI 凭据"中配置），跳过检查
+        if ( ! $api_client->is_supported() ) {
+            return $commentdata;
+        }
 
         // 调用 AI 检查评论
         $result = $api_client->check_comment( $comment_author, $comment_content );
@@ -188,21 +172,20 @@ If you output anything other than a single number, the system will fail.',
             $this->log_pending_check( array(
                 'comment_author' => $comment_author,
                 'comment_content' => $comment_content,
-                'api_status_code' => $result['status_code'],
                 'ai_score' => $result['score'],
                 'action_taken' => $action,
             ) );
 
         } else {
-            // AI 检查失败（超时或其他错误）
-            $timeout_action = sanitize_text_field( $this->settings['timeout_action'] );
+            // AI 检测失败（超时或其他错误）
+            $error_action = sanitize_text_field( $this->settings['error_action'] );
 
-            if ( $timeout_action === 'approve' ) {
-                // 超时后直接通过
+            if ( $error_action === 'approve' ) {
+                // 检测失败后直接通过
                 $action = 'approved';
                 $comment_approved = 1;
             } else {
-                // 超时后移到待审核
+                // 检测失败后移到待审核
                 $action = 'hold';
                 $comment_approved = 0;
 
@@ -214,7 +197,6 @@ If you output anything other than a single number, the system will fail.',
             $this->log_pending_check( array(
                 'comment_author' => $comment_author,
                 'comment_content' => $comment_content,
-                'api_status_code' => $result['status_code'],
                 'ai_score' => null,
                 'action_taken' => $action,
             ) );
@@ -331,7 +313,6 @@ If you output anything other than a single number, the system will fail.',
         $logger->log(
             $check_data['comment_author'],
             $check_data['comment_content'],
-            $check_data['api_status_code'],
             $check_data['ai_score'],
             $check_data['action_taken']
         );
@@ -353,8 +334,8 @@ If you output anything other than a single number, the system will fail.',
 
         // 检查是否是垃圾评论（spam 或 hold）
         if ( $action_taken === 'spam' || $action_taken === 'hold' ) {
-            // 检查是否是因为AI检测失败导致的（API状态码不是200或AI评分为null）
-            $is_error = ( $check_data['api_status_code'] !== 200 || $check_data['ai_score'] === null );
+            // AI 评分为 null 表示检测失败（超时、错误等），否则为正常检测出垃圾评论
+            $is_error = ( $check_data['ai_score'] === null );
 
             if ( $is_error ) {
                 // 检测失败的情况

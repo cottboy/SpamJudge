@@ -1,14 +1,14 @@
 === SpamJudge ===
 Contributors: cottboy
 Tags: ai, llm, spam, spam-comments, anti-spam
-Requires at least: 5.0
-Tested up to: 6.9
-Stable tag: 1.1.0
+Requires at least: 7.0
+Tested up to: 7.0
+Stable tag: 1.2.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-使用 AI 大模型自动检测和过滤垃圾评论，支持兼容 OpenAI 格式的 API。
+使用 AI 大模型自动检测和过滤垃圾评论，基于 WordPress 内置 AI Client。
 
 == Description ==
 
@@ -16,8 +16,8 @@ SpamJudge 使用 AI 大模型自动检测和过滤垃圾评论。
 
 = 特征 =
 
-* 支持任何兼容 OpenAI 格式的 API
-* 支持/v1/chat/completions和/v1/responses端点
+* 基于 WordPress 内置 AI Client（需 WordPress 7.0+），插件内无需配置 API 端点或密钥
+* AI 供应商凭据由 WordPress 在后台“设置 → AI 凭据”页面统一管理
 * 自定义 AI 提示词，根据网站特点调整评分标准
 * 可配置的分数阈值，灵活控制过滤强度
 * 详细的日志记录，追踪每条评论的处理过程
@@ -89,11 +89,15 @@ If you output anything other than a single number, the system will fail.
 
 = 需要付费吗？ =
 
-插件本身是免费的，但你需要一个 AI API 密钥，大多数 AI API 服务需要付费使用，根据使用的 token 数计费。
+插件本身是免费的，但你在 WordPress 中配置的 AI 供应商需要 API 密钥，大多数 AI API 服务需要付费使用，根据使用的 token 数计费。
+
+= 在哪里配置 AI 供应商？ =
+
+前往 WordPress 后台“设置 → AI 凭据”页面，配置至少一个支持文本生成的 AI 供应商即可，插件内部无需任何供应商设置。
 
 = 评论数据会被发送到哪里？ =
 
-评论数据会被发送到你配置的 API 进行评分，请确保使用可信的 API 服务商并查看其隐私政策，插件本身不会收集或存储任何数据到第三方服务器。
+评论数据会被发送到你在 WordPress 中配置的 AI 供应商进行评分，请确保使用可信的 AI 服务商并查看其隐私政策，插件本身不会收集或存储任何数据到第三方服务器。
 
 = 提交评论时会额外增加多少等待时间？ =
 
@@ -106,6 +110,10 @@ If you output anything other than a single number, the system will fail.
 
 == Changelog ==
 
+= 1.2.0（2026-09-19） =
+* 改用 WordPress 内置 AI Client（需 WordPress 7.0+），插件内不再需要配置供应商、端点和密钥
+* AI 供应商凭据改由 WordPress 在后台“设置 → AI 凭据”页面统一管理
+
 = 1.1.0（2025-12-03） =
 * 兼容/v1/responses端点
 * 端点URL自动补全
@@ -116,5 +124,5 @@ If you output anything other than a single number, the system will fail.
 
 == Upgrade Notice ==
 
-= 1.1.0 =
-兼容/v1/responses端点，端点URL自动补全，弃用“温度”。
+= 1.2.0 =
+需要 WordPress 7.0+。插件改用 WordPress 内置 AI Client，请在后台“设置 → AI 凭据”页面配置 AI 供应商。

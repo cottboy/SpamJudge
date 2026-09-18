@@ -1,14 +1,14 @@
 === SpamJudge ===
 Contributors: cottboy
 Tags: ai, llm, spam, spam-comments, anti-spam
-Requires at least: 5.0
-Tested up to: 6.9
-Stable tag: 1.1.0
+Requires at least: 7.0
+Tested up to: 7.0
+Stable tag: 1.2.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Using AI large language models to automatically detect and filter spam comments, supporting APIs compatible with the OpenAI format.
+Using AI large language models to automatically detect and filter spam comments, powered by the built-in WordPress AI Client.
 
 == Description ==
 
@@ -16,8 +16,8 @@ SpamJudge uses AI large language models to automatically detect and filter spam 
 
 = Features =
 
-* Supports any API compatible with the OpenAI format
-* Supports both /v1/chat/completions and /v1/response endpoints
+* Powered by the built-in WordPress AI Client (WordPress 7.0+), no need to configure API endpoints or keys in the plugin
+* AI provider credentials are managed centrally by WordPress under "Settings → AI Credentials"
 * Customizable AI prompts to adjust scoring criteria based on the characteristics of the website
 * Configurable score thresholds for flexible control over filtering intensity
 * Detailed logging to track the processing of each comment
@@ -89,11 +89,15 @@ If you output anything other than a single number, the system will fail.
 
 = Does it require payment? =
 
-The plugin itself is free, but you need an AI API key. Most AI API services require payment based on the number of tokens used.
+The plugin itself is free, but the AI provider you configure in WordPress requires an API key. Most AI API services require payment based on the number of tokens used.
+
+= Where do I configure the AI provider? =
+
+Go to "Settings → AI Credentials" in the WordPress admin dashboard and configure at least one AI provider that supports text generation. No provider settings are needed inside the plugin itself.
 
 = Where will the comment data be sent? =
 
-Comment data will be sent to the API you configure for scoring. Make sure to use a trusted API provider and review its privacy policy. The plugin itself does not collect or store any data on third-party servers.
+Comment data will be sent to the AI provider you configured in WordPress for scoring. Make sure to use a trusted AI provider and review its privacy policy. The plugin itself does not collect or store any data on third-party servers.
 
 = How much additional wait time will be added when submitting a comment? =
 
@@ -106,6 +110,10 @@ It adds about 3 seconds, depending on the service provider and model used. Using
 
 == Changelog ==
 
+= 1.2.0（2026-09-19） =
+* Switched to the built-in WordPress AI Client (WordPress 7.0+), no more provider/endpoint/key settings in the plugin
+* AI provider credentials are now managed by WordPress under "Settings → AI Credentials"
+
 = 1.1.0（2025-12-03） =
 * Compatible with the /v1/responses endpoint
 * Endpoint URL auto-completion
@@ -116,5 +124,5 @@ It adds about 3 seconds, depending on the service provider and model used. Using
 
 == Upgrade Notice ==
 
-= 1.0.0 =
-Compatible with the /v1/responses endpoint, endpoint URL auto-completion, deprecation of "temperature".
+= 1.2.0 =
+Requires WordPress 7.0+. The plugin now uses the built-in WordPress AI Client; configure your AI provider under "Settings → AI Credentials".

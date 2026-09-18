@@ -1,8 +1,9 @@
 <?php
 /**
  * Plugin Name: SpamJudge
- * Description: Using AI large language models to automatically detect and filter spam comments.
- * Version: 1.1.0
+ * Description: Using AI large language models to automatically detect and filter spam comments, powered by the WordPress AI Client.
+ * Version: 1.2.0
+ * Requires at least: 7.0
  * Author: cottboy
  * Author URI: https://www.joyfamily.top/
  * License: GPLv3 or later
@@ -17,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // 定义插件常量
-define( 'SPAMJUDGE_VERSION', '1.1.0' );
+define( 'SPAMJUDGE_VERSION', '1.2.0' );
 define( 'SPAMJUDGE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SPAMJUDGE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'SPAMJUDGE_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
@@ -35,7 +36,6 @@ function spamjudge_activate() {
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (
         comment_author varchar(255) NOT NULL,
         comment_content text NOT NULL,
-        api_status_code int(11) DEFAULT NULL,
         ai_score int(11) DEFAULT NULL,
         action_taken varchar(50) NOT NULL,
         created_at datetime DEFAULT CURRENT_TIMESTAMP,
@@ -45,11 +45,8 @@ function spamjudge_activate() {
     require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
     dbDelta( $sql );
     
-    // 设置默认选项
+    // 设置默认选项（AI 供应商凭据由 WordPress 内置 AI Client 统一管理，插件无需配置）
     $default_options = array(
-        'api_endpoint' => '',
-        'api_key' => '',
-        'model_id' => '',
         'system_prompt' => 'You are a spam comment detection system. Your ONLY task is to output a single number between 0 and 100.
 
 SCORING RULES:
@@ -72,8 +69,8 @@ Example INVALID outputs: "Score: 85", "85 points", "I think it\'s 85"
 If you output anything other than a single number, the system will fail.',
         'score_threshold' => 40, // 评分阈值，AI评分低于此值则认为是垃圾评论
         'spam_action' => 'spam', // spam 或 hold - 检测到垃圾评论后的操作
-        'timeout' => 30, // API请求超时时间（秒）
-        'timeout_action' => 'hold', // hold 或 approve
+        'timeout' => 30, // AI 请求超时时间（秒）
+        'error_action' => 'hold', // hold 或 approve - AI 检测失败后的操作
         'log_retention' => 90, // 天数，0 表示不保存，-1 表示永久保存
         'spam_message' => '', // 检测为垃圾评论后对访客的提醒，为空则不提醒
         'error_message' => '', // 检测失败后对访客的提醒，为空则不提醒
@@ -82,6 +79,70 @@ If you output anything other than a single number, the system will fail.',
     add_option( 'spamjudge_settings', $default_options );
 }
 register_activation_hook( __FILE__, 'spamjudge_activate' );
+
+/**
+ * 插件版本升级处理
+ *
+ * 版本号变化时执行一次性的数据清理与迁移，清理旧版本遗留的无效数据：
+ * - 删除已弃用的 temperature 设置
+ * - 删除已弃用的供应商相关设置（api_endpoint、api_key、model_id），供应商改由 WordPress 内置 AI Client 管理
+ * - 将旧设置中的 timeout_action 迁移为 error_action
+ * - 删除日志表中已弃用的 api_status_code 列
+ */
+function spamjudge_maybe_upgrade() {
+    // 版本号未变化时无需处理
+    if ( get_option( 'spamjudge_version' ) === SPAMJUDGE_VERSION ) {
+        return;
+    }
+
+    $settings = get_option( 'spamjudge_settings', array() );
+    $settings_changed = false;
+
+    // 删除已弃用的 temperature 设置（1.1.0 起弃用）
+    if ( isset( $settings['temperature'] ) ) {
+        unset( $settings['temperature'] );
+        $settings_changed = true;
+    }
+
+    // 删除已弃用的供应商相关设置（1.2.0 起由 WordPress 内置 AI Client 管理）
+    foreach ( array( 'api_endpoint', 'api_key', 'model_id' ) as $deprecated_key ) {
+        if ( isset( $settings[ $deprecated_key ] ) ) {
+            unset( $settings[ $deprecated_key ] );
+            $settings_changed = true;
+        }
+    }
+
+    // 将旧设置中的 timeout_action 迁移为 error_action（1.2.0 起语义覆盖所有检测失败场景）
+    if ( isset( $settings['timeout_action'] ) ) {
+        if ( ! isset( $settings['error_action'] ) ) {
+            $settings['error_action'] = $settings['timeout_action'];
+        }
+        unset( $settings['timeout_action'] );
+        $settings_changed = true;
+    }
+
+    if ( $settings_changed ) {
+        update_option( 'spamjudge_settings', $settings );
+    }
+
+    // 旧版本日志表包含 api_status_code 列，改用 WordPress AI Client 后不再有 HTTP 状态码概念，直接删除
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'spamjudge_logs';
+
+    // 检查日志表是否存在以及是否包含 api_status_code 列
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.SchemaChange -- 表名固定安全，升级迁移必须直接查询
+    $columns = $wpdb->get_col( "SHOW COLUMNS FROM {$table_name}", 0 );
+
+    if ( is_array( $columns ) && in_array( 'api_status_code', $columns, true ) ) {
+        // 列名固定安全，直接执行 ALTER
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.SchemaChange -- 升级迁移，删除已弃用列
+        $wpdb->query( "ALTER TABLE {$table_name} DROP COLUMN api_status_code" );
+    }
+
+    // 记录当前版本号，避免重复执行迁移
+    update_option( 'spamjudge_version', SPAMJUDGE_VERSION );
+}
+add_action( 'init', 'spamjudge_maybe_upgrade' );
 
 // 自 WordPress 4.6 起，WordPress.org 托管插件会自动加载翻译，避免显式调用以通过插件检查工具。
 // 若需在非 WordPress.org 环境手动加载翻译，可在自定义钩子中选择性调用 load_plugin_textdomain()。

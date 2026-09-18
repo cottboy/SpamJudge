@@ -37,18 +37,16 @@ class SpamJudge_Comment_Logger {
      *
      * @param string $comment_author 评论者名称
      * @param string $comment_content 评论内容
-     * @param int    $api_status_code API 响应状态码
      * @param int    $ai_score AI 评分
      * @param string $action_taken 执行的操作
      * @return bool 是否成功
      */
-    public function log( $comment_author, $comment_content, $api_status_code, $ai_score, $action_taken ) {
+    public function log( $comment_author, $comment_content, $ai_score, $action_taken ) {
         global $wpdb;
 
         // 验证输入
         $comment_author = sanitize_text_field( $comment_author );
         $comment_content = sanitize_textarea_field( $comment_content );
-        $api_status_code = $api_status_code !== null ? absint( $api_status_code ) : null;
         $ai_score = $ai_score !== null ? absint( $ai_score ) : null;
         $action_taken = sanitize_text_field( $action_taken );
 
@@ -59,7 +57,6 @@ class SpamJudge_Comment_Logger {
             array(
                 'comment_author' => $comment_author,
                 'comment_content' => $comment_content,
-                'api_status_code' => $api_status_code,
                 'ai_score' => $ai_score,
                 'action_taken' => $action_taken,
                 'created_at' => current_time( 'mysql' ),
@@ -67,7 +64,6 @@ class SpamJudge_Comment_Logger {
             array(
                 '%s', // comment_author
                 '%s', // comment_content
-                '%d', // api_status_code
                 '%d', // ai_score
                 '%s', // action_taken
                 '%s', // created_at

@@ -133,8 +133,6 @@
 
 /* 表单输入字段统一宽度 */
 .form-table input[type="text"],
-.form-table input[type="url"],
-.form-table input[type="password"],
 .form-table input[type="number"],
 .form-table textarea,
 .form-table select {
@@ -147,37 +145,6 @@
     margin-top: 5px;
     color: #666;
     font-style: italic;
-}
-
-/* 密码输入框与眼睛按钮 */
-.sj-password-wrapper {
-    position: relative;
-    display: inline-block;
-    width: 100%;
-    max-width: 500px;
-}
-
-.sj-password-wrapper input {
-    padding-right: 40px; /* 为眼睛按钮留出空间 */
-}
-
-/* 眼睛按钮样式 */
-.sj-toggle-password {
-    position: absolute;
-    right: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
-    line-height: 1;
-    color: #787c82;
-}
-
-/* 眼睛按钮悬停效果 */
-.sj-toggle-password:hover {
-    color: #2271b1;
 }
 
 /* 响应式设计 */
