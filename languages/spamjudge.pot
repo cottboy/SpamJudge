@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SpamJudge 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-19 02:03+0800\n"
+"POT-Creation-Date: 2026-09-19 03:04+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -103,152 +103,134 @@ msgstr ""
 msgid "&rsaquo;"
 msgstr ""
 
-#: admin/class-admin-settings.php:368
-msgid ""
-"当前 WordPress 版本没有内置 AI Client，本插件需要 WordPress 7.0 或更高版本才"
-"能工作。"
-msgstr ""
-
-#: admin/class-admin-settings.php:372
-msgid ""
-"尚未配置 AI 供应商凭据，评论检测功能暂不生效。请前往后台“设置 → 连接”页面配置"
-"至少一个 AI 供应商。"
-msgstr ""
-
-#: admin/class-admin-settings.php:376
-msgid ""
-"本插件通过 WordPress 内置 AI Client 调用 AI，无需单独配置 API 端点或密钥。AI "
-"供应商凭据可在后台“设置 → 连接”页面统一管理。"
-msgstr ""
-
-#: admin/class-admin-settings.php:384
+#: admin/class-admin-settings.php:359
 msgid "AI 提供商"
 msgstr ""
 
-#: admin/class-admin-settings.php:389
+#: admin/class-admin-settings.php:364
 msgid "自动选择（由 WordPress 决定）"
 msgstr ""
 
-#: admin/class-admin-settings.php:398
+#: admin/class-admin-settings.php:373
 msgid "选择用于评论评分的 AI 提供商，仅列出已配置凭据的提供商"
 msgstr ""
 
-#: admin/class-admin-settings.php:406
+#: admin/class-admin-settings.php:381
 msgid "系统提示词"
 msgstr ""
 
-#: admin/class-admin-settings.php:412
+#: admin/class-admin-settings.php:387
 msgid "发送给 AI 的系统提示词，用于指导 AI 如何评分"
 msgstr ""
 
-#: admin/class-admin-settings.php:420
+#: admin/class-admin-settings.php:395
 msgid "分数阈值"
 msgstr ""
 
-#: admin/class-admin-settings.php:427
+#: admin/class-admin-settings.php:402
 msgid "低于此分数的评论将被标记为垃圾评论（0-100）"
 msgstr ""
 
-#: admin/class-admin-settings.php:435
+#: admin/class-admin-settings.php:410
 msgid "检测到垃圾评论后的操作"
 msgstr ""
 
-#: admin/class-admin-settings.php:440
+#: admin/class-admin-settings.php:415
 msgid "移到垃圾队列"
 msgstr ""
 
-#: admin/class-admin-settings.php:443 admin/class-admin-settings.php:475
+#: admin/class-admin-settings.php:418 admin/class-admin-settings.php:450
 msgid "移到待审核队列"
 msgstr ""
 
-#: admin/class-admin-settings.php:447
+#: admin/class-admin-settings.php:422
 msgid "当评论分数低于阈值时的处理方式"
 msgstr ""
 
-#: admin/class-admin-settings.php:455
+#: admin/class-admin-settings.php:430
 msgid "超时时间（秒）"
 msgstr ""
 
-#: admin/class-admin-settings.php:462
+#: admin/class-admin-settings.php:437
 msgid "AI 请求超时时间"
 msgstr ""
 
-#: admin/class-admin-settings.php:470
+#: admin/class-admin-settings.php:445
 msgid "检测失败后的操作"
 msgstr ""
 
-#: admin/class-admin-settings.php:478
+#: admin/class-admin-settings.php:453
 msgid "直接通过"
 msgstr ""
 
-#: admin/class-admin-settings.php:482
+#: admin/class-admin-settings.php:457
 msgid "当 AI 检测失败（超时、未配置供应商、返回无效数据等）时的处理方式"
 msgstr ""
 
-#: admin/class-admin-settings.php:490
+#: admin/class-admin-settings.php:465
 msgid "日志保留时间"
 msgstr ""
 
-#: admin/class-admin-settings.php:495
+#: admin/class-admin-settings.php:470
 msgid "不保存"
 msgstr ""
 
-#: admin/class-admin-settings.php:498
+#: admin/class-admin-settings.php:473
 msgid "1天"
 msgstr ""
 
-#: admin/class-admin-settings.php:501
+#: admin/class-admin-settings.php:476
 msgid "3天"
 msgstr ""
 
-#: admin/class-admin-settings.php:504
+#: admin/class-admin-settings.php:479
 msgid "7天"
 msgstr ""
 
-#: admin/class-admin-settings.php:507
+#: admin/class-admin-settings.php:482
 msgid "14天"
 msgstr ""
 
-#: admin/class-admin-settings.php:510
+#: admin/class-admin-settings.php:485
 msgid "30天"
 msgstr ""
 
-#: admin/class-admin-settings.php:513
+#: admin/class-admin-settings.php:488
 msgid "90天"
 msgstr ""
 
-#: admin/class-admin-settings.php:516
+#: admin/class-admin-settings.php:491
 msgid "180天"
 msgstr ""
 
-#: admin/class-admin-settings.php:519
+#: admin/class-admin-settings.php:494
 msgid "365天"
 msgstr ""
 
-#: admin/class-admin-settings.php:522
+#: admin/class-admin-settings.php:497
 msgid "永久保存"
 msgstr ""
 
-#: admin/class-admin-settings.php:526
+#: admin/class-admin-settings.php:501
 msgid "日志保留时长，过期日志将自动删除"
 msgstr ""
 
-#: admin/class-admin-settings.php:534
+#: admin/class-admin-settings.php:509
 msgid "检测为垃圾评论后对访客的提醒"
 msgstr ""
 
-#: admin/class-admin-settings.php:540
+#: admin/class-admin-settings.php:515
 msgid "当评论被AI检测为垃圾评论时显示给访客的提醒文字，留空则不提醒"
 msgstr ""
 
-#: admin/class-admin-settings.php:548
+#: admin/class-admin-settings.php:523
 msgid "检测失败后对访客的提醒"
 msgstr ""
 
-#: admin/class-admin-settings.php:554
+#: admin/class-admin-settings.php:529
 msgid "当AI检测失败（API错误、超时等）时显示给访客的提醒文字，留空则不提醒"
 msgstr ""
 
-#: admin/class-admin-settings.php:598
+#: admin/class-admin-settings.php:573
 msgid "权限不足"
 msgstr ""

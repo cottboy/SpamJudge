@@ -344,38 +344,13 @@ class SpamJudge_Admin_Settings {
     private function render_settings_tab() {
         // 获取当前设置
         $settings = get_option( 'spamjudge_settings', array() );
-        
-        // 检测 WordPress 内置 AI Client 是否存在（WordPress 7.0+ 才有）
-        $ai_client_exists = function_exists( 'wp_ai_client_prompt' );
 
-        // 检测站点是否已配置支持文本生成的 AI 供应商凭据
-        $ai_supported = false;
-        if ( $ai_client_exists ) {
-            $api_client = new SpamJudge_API_Client( $settings );
-            $ai_supported = $api_client->is_supported();
-        }
+        // 获取当前可用的 AI 提供商列表（已配置凭据的）
+        $available_providers = SpamJudge_API_Client::get_available_providers();
 
-        // 获取当前可用的 AI 提供商列表（已配置凭据且支持文本生成）
-        $available_providers = $ai_client_exists ? SpamJudge_API_Client::get_available_providers() : array();
-        
         ?>
         <form method="post" action="options.php">
             <?php settings_fields( 'spamjudge_settings_group' ); ?>
-
-            <!-- AI 供应商状态提示：凭据由 WordPress 内置 AI Client 统一管理，插件不再单独配置 -->
-            <?php if ( ! $ai_client_exists ) : ?>
-                <div class="notice notice-error"><p>
-                    <?php esc_html_e( '当前 WordPress 版本没有内置 AI Client，本插件需要 WordPress 7.0 或更高版本才能工作。', 'spamjudge' ); ?>
-                </p></div>
-            <?php elseif ( ! $ai_supported ) : ?>
-                <div class="notice notice-warning"><p>
-                    <?php esc_html_e( '尚未配置 AI 供应商凭据，评论检测功能暂不生效。请前往后台“设置 → 连接”页面配置至少一个 AI 供应商。', 'spamjudge' ); ?>
-                </p></div>
-            <?php else : ?>
-                <div class="notice notice-info"><p>
-                    <?php esc_html_e( '本插件通过 WordPress 内置 AI Client 调用 AI，无需单独配置 API 端点或密钥。AI 供应商凭据可在后台“设置 → 连接”页面统一管理。', 'spamjudge' ); ?>
-                </p></div>
-            <?php endif; ?>
 
             <table class="form-table">
                 <!-- AI 提供商 -->
