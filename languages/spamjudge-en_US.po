@@ -5,7 +5,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: SpamJudge 1.2.0\n"
+"Project-Id-Version: SpamJudge 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-19 00:29+0800\n"
 "PO-Revision-Date: 2026-03-01 23:12+0800\n"

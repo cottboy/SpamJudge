@@ -2,7 +2,7 @@
 /**
  * Plugin Name: SpamJudge
  * Description: Using AI large language models to automatically detect and filter spam comments, powered by the WordPress AI Client.
- * Version: 1.2.0
+ * Version: 2.0.0
  * Requires at least: 7.0
  * Author: cottboy
  * Author URI: https://www.joyfamily.top/
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // 定义插件常量
-define( 'SPAMJUDGE_VERSION', '1.2.0' );
+define( 'SPAMJUDGE_VERSION', '2.0.0' );
 define( 'SPAMJUDGE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SPAMJUDGE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'SPAMJUDGE_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
@@ -104,7 +104,7 @@ function spamjudge_maybe_upgrade() {
         $settings_changed = true;
     }
 
-    // 删除已弃用的供应商相关设置（1.2.0 起由 WordPress 内置 AI Client 管理）
+    // 删除已弃用的供应商相关设置（2.0.0 起由 WordPress 内置 AI Client 管理）
     foreach ( array( 'api_endpoint', 'api_key', 'model_id' ) as $deprecated_key ) {
         if ( isset( $settings[ $deprecated_key ] ) ) {
             unset( $settings[ $deprecated_key ] );
@@ -112,7 +112,7 @@ function spamjudge_maybe_upgrade() {
         }
     }
 
-    // 将旧设置中的 timeout_action 迁移为 error_action（1.2.0 起语义覆盖所有检测失败场景）
+    // 将旧设置中的 timeout_action 迁移为 error_action（2.0.0 起语义覆盖所有检测失败场景）
     if ( isset( $settings['timeout_action'] ) ) {
         if ( ! isset( $settings['error_action'] ) ) {
             $settings['error_action'] = $settings['timeout_action'];

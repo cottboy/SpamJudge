@@ -3,7 +3,7 @@ Contributors: cottboy
 Tags: ai, llm, spam, spam-comments, anti-spam
 Requires at least: 7.0
 Tested up to: 7.0
-Stable tag: 1.2.0
+Stable tag: 2.0.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -110,7 +110,7 @@ It adds about 3 seconds, depending on the service provider and model used. Using
 
 == Changelog ==
 
-= 1.2.0（2026-09-19） =
+= 2.0.0（2026-09-19） =
 * Switched to the built-in WordPress AI Client (WordPress 7.0+), no more provider/endpoint/key settings in the plugin
 * AI provider credentials are now managed by WordPress under "Settings → AI Credentials"
 
@@ -124,5 +124,5 @@ It adds about 3 seconds, depending on the service provider and model used. Using
 
 == Upgrade Notice ==
 
-= 1.2.0 =
+= 2.0.0 =
 Requires WordPress 7.0+. The plugin now uses the built-in WordPress AI Client; configure your AI provider under "Settings → AI Credentials".

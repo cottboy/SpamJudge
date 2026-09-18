@@ -3,7 +3,7 @@ Contributors: cottboy
 Tags: ai, llm, spam, spam-comments, anti-spam
 Requires at least: 7.0
 Tested up to: 7.0
-Stable tag: 1.2.0
+Stable tag: 2.0.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -110,7 +110,7 @@ If you output anything other than a single number, the system will fail.
 
 == Changelog ==
 
-= 1.2.0（2026-09-19） =
+= 2.0.0（2026-09-19） =
 * 改用 WordPress 内置 AI Client（需 WordPress 7.0+），插件内不再需要配置供应商、端点和密钥
 * AI 供应商凭据改由 WordPress 在后台“设置 → AI 凭据”页面统一管理
 
@@ -124,5 +124,5 @@ If you output anything other than a single number, the system will fail.
 
 == Upgrade Notice ==
 
-= 1.2.0 =
+= 2.0.0 =
 需要 WordPress 7.0+。插件改用 WordPress 内置 AI Client，请在后台“设置 → AI 凭据”页面配置 AI 供应商。
