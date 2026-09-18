@@ -87,6 +87,22 @@ class SpamJudge_Admin_Settings {
     public function sanitize_settings( $input ) {
         $sanitized = array();
 
+        // AI 提供商：白名单校验，仅允许"自动"或当前实际可用的提供商 ID
+        if ( isset( $input['provider_id'] ) ) {
+            $provider_id = sanitize_text_field( $input['provider_id'] );
+            $available_providers = SpamJudge_API_Client::get_available_providers();
+
+            if ( $provider_id === '' ) {
+                // 空值表示由 WordPress 自动选择提供商
+                $sanitized['provider_id'] = '';
+            } elseif ( array_key_exists( $provider_id, $available_providers ) ) {
+                $sanitized['provider_id'] = $provider_id;
+            } else {
+                // 提供商无效（未配置凭据或不存在），回退为自动选择
+                $sanitized['provider_id'] = '';
+            }
+        }
+
         // 系统提示词
         if ( isset( $input['system_prompt'] ) ) {
             $sanitized['system_prompt'] = sanitize_textarea_field( $input['system_prompt'] );
@@ -338,6 +354,9 @@ class SpamJudge_Admin_Settings {
             $api_client = new SpamJudge_API_Client( $settings );
             $ai_supported = $api_client->is_supported();
         }
+
+        // 获取当前可用的 AI 提供商列表（已配置凭据且支持文本生成）
+        $available_providers = $ai_client_exists ? SpamJudge_API_Client::get_available_providers() : array();
         
         ?>
         <form method="post" action="options.php">
@@ -359,6 +378,28 @@ class SpamJudge_Admin_Settings {
             <?php endif; ?>
 
             <table class="form-table">
+                <!-- AI 提供商 -->
+                <tr>
+                    <th scope="row">
+                        <label for="provider_id"><?php esc_html_e( 'AI 提供商', 'spamjudge' ); ?></label>
+                    </th>
+                    <td>
+                        <select id="provider_id" name="spamjudge_settings[provider_id]">
+                            <option value="" <?php selected( $settings['provider_id'] ?? '', '' ); ?>>
+                                <?php esc_html_e( '自动选择（由 WordPress 决定）', 'spamjudge' ); ?>
+                            </option>
+                            <?php foreach ( $available_providers as $provider_id => $provider_name ) : ?>
+                                <option value="<?php echo esc_attr( $provider_id ); ?>" <?php selected( $settings['provider_id'] ?? '', $provider_id ); ?>>
+                                    <?php echo esc_html( $provider_name ); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <p class="description">
+                            <?php esc_html_e( '选择用于评论评分的 AI 提供商，仅列出已配置凭据且支持文本生成的提供商', 'spamjudge' ); ?>
+                        </p>
+                    </td>
+                </tr>
+
                 <!-- 系统提示词 -->
                 <tr>
                     <th scope="row">

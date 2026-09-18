@@ -65,6 +65,7 @@ class SpamJudge {
         
         // 确保所有必需的设置都存在（供应商与密钥由 WordPress 内置 AI Client 管理，插件无需配置）
         $defaults = array(
+            'provider_id' => '',
             'system_prompt' => 'You are a spam comment detection system. Your ONLY task is to output a single number between 0 and 100.
 
 SCORING RULES:

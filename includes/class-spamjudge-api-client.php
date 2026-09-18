@@ -15,11 +15,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WordPress\AiClient\Providers\Http\DTO\RequestOptions;
+use WordPress\AiClient\Providers\Models\DTO\ModelRequirements;
+use WordPress\AiClient\Providers\Models\Enums\CapabilityEnum;
 
 /**
  * AI 检测客户端类
  */
 class SpamJudge_API_Client {
+
+    /**
+     * AI 提供商 ID（空字符串表示由 WordPress 自动选择）
+     *
+     * @var string
+     */
+    private $provider_id;
 
     /**
      * 系统提示词
@@ -42,6 +51,7 @@ class SpamJudge_API_Client {
      */
     public function __construct( $settings ) {
         // 验证和清理输入
+        $this->provider_id = sanitize_text_field( $settings['provider_id'] ?? '' );
         $this->system_prompt = sanitize_textarea_field( $settings['system_prompt'] ?? '' );
         $this->timeout = absint( $settings['timeout'] ?? 30 );
 
@@ -50,16 +60,73 @@ class SpamJudge_API_Client {
     }
 
     /**
+     * 获取当前站点可用的 AI 提供商列表
+     *
+     * 仅返回已配置凭据且支持文本生成的提供商，供设置页下拉框使用。
+     * WordPress 版本低于 7.0（无内置 AI Client）时返回空数组。
+     *
+     * @return array 以提供商 ID 为键、显示名称为值的数组
+     */
+    public static function get_available_providers() {
+        // WordPress 内置 AI Client 不可用时直接返回空列表
+        if ( ! function_exists( 'wp_ai_client_prompt' ) ) {
+            return array();
+        }
+
+        $registry = \WordPress\AiClient\AiClient::defaultRegistry();
+
+        // 只筛选支持文本生成能力的提供商（本插件只需要文本评分）
+        $requirements = new ModelRequirements(
+            array( CapabilityEnum::textGeneration() ),
+            array()
+        );
+
+        $providers = array();
+
+        foreach ( $registry->findModelsMetadataForSupport( $requirements ) as $provider_models ) {
+            $metadata = $provider_models->getProvider();
+            $provider_id = $metadata->getId();
+
+            // 仅列出已配置凭据的提供商，未配置的选择了也无法工作
+            if ( $registry->isProviderConfigured( $provider_id ) ) {
+                $providers[ $provider_id ] = $metadata->getName();
+            }
+        }
+
+        return $providers;
+    }
+
+    /**
+     * 构建评分用的提示词构建器
+     *
+     * 统一 is_supported() 与 check_comment() 的构建逻辑，
+     * 确保能力检测与实际请求使用相同的提供商配置
+     *
+     * @param string $text 用户消息文本
+     * @return WordPress\AI_Client\Builders\Prompt_Builder_With_WP_Error
+     */
+    private function build_prompt( $text ) {
+        $builder = wp_ai_client_prompt()
+            ->using_system_instruction( $this->system_prompt );
+
+        // 设置了指定提供商时使用之，否则由 WordPress 自动选择
+        if ( $this->provider_id !== '' ) {
+            $builder = $builder->using_provider( $this->provider_id );
+        }
+
+        return $builder->with_text( $text );
+    }
+
+    /**
      * 检测当前站点是否支持 AI 文本生成
      *
      * 基于 WordPress 内置 AI Client 的能力检测，纯本地判断，不产生任何 API 请求。
-     * 只要站点在"设置 → AI 凭据"中配置了任一支持文本生成的供应商即返回 true。
+     * 若设置了指定提供商，则只检测该提供商；否则检测任意已配置的提供商。
      *
      * @return bool
      */
     public function is_supported() {
-        return wp_ai_client_prompt()
-            ->with_text( 'test' )
+        return $this->build_prompt( 'test' )
             ->is_supported_for_text_generation();
     }
 
@@ -87,9 +154,7 @@ class SpamJudge_API_Client {
         );
 
         // 通过 WordPress 内置 AI Client 发起文本生成请求
-        $ai_response = wp_ai_client_prompt()
-            ->using_system_instruction( $this->system_prompt )
-            ->with_text( $user_message )
+        $ai_response = $this->build_prompt( $user_message )
             // 使用插件设置的超时时间覆盖默认请求选项
             ->using_request_options(
                 RequestOptions::fromArray(

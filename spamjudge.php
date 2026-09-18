@@ -47,6 +47,7 @@ function spamjudge_activate() {
     
     // 设置默认选项（AI 供应商凭据由 WordPress 内置 AI Client 统一管理，插件无需配置）
     $default_options = array(
+        'provider_id' => '', // AI 提供商 ID，空表示由 WordPress 自动选择
         'system_prompt' => 'You are a spam comment detection system. Your ONLY task is to output a single number between 0 and 100.
 
 SCORING RULES:
