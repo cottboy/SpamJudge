@@ -15,9 +15,9 @@
     margin-top: 10px;
 }
 
-/* 标签页内容 - 减少与导航的间距 */
+/* 标签页内容 - 减少与导航的间距，顶部不留额外空隙 */
 .tab-content {
-    padding: 15px 20px 20px;
+    padding: 0 20px 20px;
     margin-top: 10px;
 }
 
