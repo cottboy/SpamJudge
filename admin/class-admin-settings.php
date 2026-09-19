@@ -160,20 +160,20 @@ class SpamJudge_Admin_Settings {
             return;
         }
         
-        // 加载样式（版本号取文件修改时间，确保样式更新后浏览器缓存立即失效）
+        // 加载样式
         wp_enqueue_style(
             'spamjudge-admin',
             SPAMJUDGE_PLUGIN_URL . 'admin/css/admin-style.css',
             array(),
-            (string) filemtime( SPAMJUDGE_PLUGIN_DIR . 'admin/css/admin-style.css' )
+            SPAMJUDGE_VERSION
         );
 
-        // 加载脚本（版本号取文件修改时间，确保脚本更新后浏览器缓存立即失效）
+        // 加载脚本
         wp_enqueue_script(
             'spamjudge-admin',
             SPAMJUDGE_PLUGIN_URL . 'admin/js/admin-script.js',
             array( 'jquery' ),
-            (string) filemtime( SPAMJUDGE_PLUGIN_DIR . 'admin/js/admin-script.js' ),
+            SPAMJUDGE_VERSION,
             true
         );
         
