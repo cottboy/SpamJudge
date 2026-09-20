@@ -3,8 +3,8 @@
  * AI 检测客户端类
  *
  * 通过 WordPress 7.0 内置的 AI Client（wp_ai_client_prompt()）与 AI 模型通信。
- * 供应商、API 端点与密钥均由 WordPress 统一管理（后台"设置 → 连接"），
- * 插件本身不再单独配置任何供应商信息。
+ * 供应商与 API 密钥由 WordPress 统一管理（后台"设置 → 连接"），
+ * 插件可指定提供商与模型 ID（留空则使用默认值）。
  *
  * @package SpamJudge
  */
@@ -29,6 +29,13 @@ class SpamJudge_API_Client {
     private $provider_id;
 
     /**
+     * 模型 ID（空字符串表示使用提供商的默认模型）
+     *
+     * @var string
+     */
+    private $model_id;
+
+    /**
      * 系统提示词
      *
      * @var string
@@ -50,6 +57,7 @@ class SpamJudge_API_Client {
     public function __construct( $settings ) {
         // 验证和清理输入
         $this->provider_id = sanitize_text_field( $settings['provider_id'] ?? '' );
+        $this->model_id = sanitize_text_field( $settings['model_id'] ?? '' );
         $this->system_prompt = sanitize_textarea_field( $settings['system_prompt'] ?? '' );
         $this->timeout = absint( $settings['timeout'] ?? 30 );
 
@@ -123,6 +131,11 @@ class SpamJudge_API_Client {
         // 设置了指定提供商时使用之，否则由 WordPress 自动选择
         if ( $this->provider_id !== '' ) {
             $builder = $builder->using_provider( $this->provider_id );
+        }
+
+        // 设置了指定模型时使用之，否则使用提供商的默认模型
+        if ( $this->model_id !== '' ) {
+            $builder = $builder->using_model_preference( $this->model_id );
         }
 
         return $builder->with_text( $text );

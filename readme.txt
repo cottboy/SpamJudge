@@ -113,6 +113,7 @@ It adds about 3 seconds, depending on the service provider and model used. Using
 = 2.0.0（2026-09-19） =
 * Switched to the built-in WordPress AI Client (WordPress 7.0+), no more provider/endpoint/key settings in the plugin
 * AI provider credentials are now managed by WordPress under "Settings → Connectors"
+* New Model ID setting: leave empty to use the provider's default model, or enter a custom model; existing model ID values from older versions carry over automatically
 
 = 1.1.0（2025-12-03） =
 * Compatible with the /v1/responses endpoint

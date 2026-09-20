@@ -113,6 +113,7 @@ If you output anything other than a single number, the system will fail.
 = 2.0.0（2026-09-19） =
 * 改用 WordPress 内置 AI Client（需 WordPress 7.0+），插件内不再需要配置供应商、端点和密钥
 * AI 供应商凭据改由 WordPress 在后台“设置 → 连接”页面统一管理
+* 新增模型 ID 设置：留空使用提供商默认模型，也可填写自定义模型，旧版本的模型 ID 设置值自动沿用
 
 = 1.1.0（2025-12-03） =
 * 兼容/v1/responses端点

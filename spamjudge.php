@@ -48,6 +48,7 @@ function spamjudge_activate() {
     // 设置默认选项（AI 供应商凭据由 WordPress 内置 AI Client 统一管理，插件无需配置）
     $default_options = array(
         'provider_id' => '', // AI 提供商 ID，空表示由 WordPress 自动选择
+        'model_id' => '', // AI 模型 ID，空表示使用提供商的默认模型
         'system_prompt' => 'You are a spam comment detection system. Your ONLY task is to output a single number between 0 and 100.
 
 SCORING RULES:
@@ -86,7 +87,8 @@ register_activation_hook( __FILE__, 'spamjudge_activate' );
  *
  * 版本号变化时执行一次性的数据清理与迁移，清理旧版本遗留的无效数据：
  * - 删除已弃用的 temperature 设置
- * - 删除已弃用的供应商相关设置（api_endpoint、api_key、model_id），供应商改由 WordPress 内置 AI Client 管理
+ * - 删除已弃用的供应商相关设置（api_endpoint、api_key），供应商改由 WordPress 内置 AI Client 管理；
+ *   model_id 沿用旧值（2.0.0 起重新作为"自定义模型"设置项，空值表示使用提供商默认模型）
  * - 将旧设置中的 timeout_action 迁移为 error_action
  * - 删除日志表中已弃用的 api_status_code 列
  */
@@ -106,7 +108,8 @@ function spamjudge_maybe_upgrade() {
     }
 
     // 删除已弃用的供应商相关设置（2.0.0 起由 WordPress 内置 AI Client 管理）
-    foreach ( array( 'api_endpoint', 'api_key', 'model_id' ) as $deprecated_key ) {
+    // 注意：model_id 不在删除之列，旧版本的模型 ID 沿用为新的"自定义模型"设置
+    foreach ( array( 'api_endpoint', 'api_key' ) as $deprecated_key ) {
         if ( isset( $settings[ $deprecated_key ] ) ) {
             unset( $settings[ $deprecated_key ] );
             $settings_changed = true;

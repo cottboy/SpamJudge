@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SpamJudge 2.0.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-19 03:04+0800\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/spamjudge\n"
+"POT-Creation-Date: 2026-09-20T00:00:00+00:00\n"
 "PO-Revision-Date: 2026-03-01 23:12+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.8\n"
 
-#: spamjudge.php:201 admin/class-admin-settings.php:224
+#: spamjudge.php:204 admin/class-admin-settings.php:229
 msgid "设置"
 msgstr "Settings"
 
@@ -29,334 +29,232 @@ msgstr "Comment Notification"
 msgid "SpamJudge"
 msgstr "SpamJudge"
 
-#: admin/class-admin-settings.php:188
+#: admin/class-admin-settings.php:193
 msgid "处理中..."
 msgstr "Processing..."
 
-#: admin/class-admin-settings.php:189 admin/class-admin-settings.php:319
+#: admin/class-admin-settings.php:194 admin/class-admin-settings.php:324
 msgid "清空所有日志"
 msgstr "Clear all logs"
 
-#: admin/class-admin-settings.php:190
+#: admin/class-admin-settings.php:195
 msgid "表单验证失败："
 msgstr "Form validation failed:"
 
-#: admin/class-admin-settings.php:191
+#: admin/class-admin-settings.php:196
 msgid "系统提示词不能为空"
 msgstr "The system prompt cannot be left blank"
 
-#: admin/class-admin-settings.php:192
+#: admin/class-admin-settings.php:197
 msgid "分数阈值必须在 0-100 之间"
 msgstr "The score threshold must be between 0 and 100"
 
-#: admin/class-admin-settings.php:193
+#: admin/class-admin-settings.php:198
 msgid "超时时间必须至少为 5 秒"
 msgstr "The timeout period must be at least 5 seconds"
 
-#: admin/class-admin-settings.php:205
+#: admin/class-admin-settings.php:210
 msgid "您没有权限访问此页面"
 msgstr "You do not have permission to access this page"
 
-#: admin/class-admin-settings.php:221
+#: admin/class-admin-settings.php:226
 msgid "日志"
 msgstr "Log"
 
-#: admin/class-admin-settings.php:265
+#: admin/class-admin-settings.php:270
 msgid "评论者"
 msgstr "Commentator"
 
-#: admin/class-admin-settings.php:266
+#: admin/class-admin-settings.php:271
 msgid "评论内容"
 msgstr "Comment content"
 
-#: admin/class-admin-settings.php:267
+#: admin/class-admin-settings.php:272
 msgid "AI 评分"
 msgstr "AI Score"
 
-#: admin/class-admin-settings.php:268
+#: admin/class-admin-settings.php:273
 msgid "执行操作"
 msgstr "Perform the operation"
 
-#: admin/class-admin-settings.php:269
+#: admin/class-admin-settings.php:274
 msgid "时间"
 msgstr "Time"
 
-#: admin/class-admin-settings.php:276
+#: admin/class-admin-settings.php:281
 msgid "暂无日志记录"
 msgstr "No logs available"
 
-#: admin/class-admin-settings.php:296
+#: admin/class-admin-settings.php:301
 msgid "垃圾"
 msgstr "trash"
 
-#: admin/class-admin-settings.php:297
+#: admin/class-admin-settings.php:302
 msgid "通过"
 msgstr "Through"
 
-#: admin/class-admin-settings.php:298
+#: admin/class-admin-settings.php:303
 msgid "待审核"
 msgstr "Pending review"
 
-#: admin/class-admin-settings.php:328
+#: admin/class-admin-settings.php:333
 msgid "&lsaquo;"
 msgstr "&lsaquo;"
 
-#: admin/class-admin-settings.php:329
+#: admin/class-admin-settings.php:334
 msgid "&rsaquo;"
 msgstr "&rsaquo;"
 
-#: admin/class-admin-settings.php:359
+#: admin/class-admin-settings.php:364
 msgid "AI 提供商"
 msgstr "AI Provider"
 
-#: admin/class-admin-settings.php:364
+#: admin/class-admin-settings.php:369
 msgid "自动选择（由 WordPress 决定）"
 msgstr "Automatic (decided by WordPress)"
 
-#: admin/class-admin-settings.php:373
+#: admin/class-admin-settings.php:378
 msgid "选择用于评论评分的 AI 提供商，仅列出已配置凭据的提供商"
 msgstr ""
 "The AI provider used for comment scoring. Only providers with configured "
 "credentials are listed"
 
-#: admin/class-admin-settings.php:381
+#: admin/class-admin-settings.php:386
+msgid "模型 ID"
+msgstr "Model ID"
+
+#: admin/class-admin-settings.php:393
+msgid "留空使用提供商的默认模型，填写模型 ID 可指定要使用的模型"
+msgstr ""
+"Leave empty to use the provider's default model, or enter a model ID to use "
+"a specific model"
+
+#: admin/class-admin-settings.php:401
 msgid "系统提示词"
 msgstr "System Prompt"
 
-#: admin/class-admin-settings.php:387
+#: admin/class-admin-settings.php:407
 msgid "发送给 AI 的系统提示词，用于指导 AI 如何评分"
 msgstr "System prompts sent to AI to guide how it assigns scores"
 
-#: admin/class-admin-settings.php:395
+#: admin/class-admin-settings.php:415
 msgid "分数阈值"
 msgstr "Score threshold"
 
-#: admin/class-admin-settings.php:402
+#: admin/class-admin-settings.php:422
 msgid "低于此分数的评论将被标记为垃圾评论（0-100）"
 msgstr "Comments scoring below this threshold will be flagged as spam (0-100)."
 
-#: admin/class-admin-settings.php:410
+#: admin/class-admin-settings.php:430
 msgid "检测到垃圾评论后的操作"
 msgstr "Actions taken after detecting spam comments"
 
-#: admin/class-admin-settings.php:415
+#: admin/class-admin-settings.php:435
 msgid "移到垃圾队列"
 msgstr "Move to trash queue"
 
-#: admin/class-admin-settings.php:418 admin/class-admin-settings.php:450
+#: admin/class-admin-settings.php:438 admin/class-admin-settings.php:470
 msgid "移到待审核队列"
 msgstr "Move to pending review queue"
 
-#: admin/class-admin-settings.php:422
+#: admin/class-admin-settings.php:442
 msgid "当评论分数低于阈值时的处理方式"
 msgstr "Handling when the review score falls below the threshold"
 
-#: admin/class-admin-settings.php:430
+#: admin/class-admin-settings.php:450
 msgid "超时时间（秒）"
 msgstr "Timeout (seconds)"
 
-#: admin/class-admin-settings.php:437
+#: admin/class-admin-settings.php:457
 msgid "AI 请求超时时间"
 msgstr "AI request timeout"
 
-#: admin/class-admin-settings.php:445
+#: admin/class-admin-settings.php:465
 msgid "检测失败后的操作"
 msgstr "Action after detection failure"
 
-#: admin/class-admin-settings.php:453
+#: admin/class-admin-settings.php:473
 msgid "直接通过"
 msgstr "Directly through"
 
-#: admin/class-admin-settings.php:457
+#: admin/class-admin-settings.php:477
 msgid "当 AI 检测失败（超时、未配置供应商、返回无效数据等）时的处理方式"
 msgstr ""
 "How to handle failed AI detections (timeouts, unconfigured providers, "
 "invalid responses, etc.)"
 
-#: admin/class-admin-settings.php:465
+#: admin/class-admin-settings.php:485
 msgid "日志保留时间"
 msgstr "Log retention period"
 
-#: admin/class-admin-settings.php:470
+#: admin/class-admin-settings.php:490
 msgid "不保存"
 msgstr "Do not save"
 
-#: admin/class-admin-settings.php:473
+#: admin/class-admin-settings.php:493
 msgid "1天"
 msgstr "1 day"
 
-#: admin/class-admin-settings.php:476
+#: admin/class-admin-settings.php:496
 msgid "3天"
 msgstr "3 days"
 
-#: admin/class-admin-settings.php:479
+#: admin/class-admin-settings.php:499
 msgid "7天"
 msgstr "7 days"
 
-#: admin/class-admin-settings.php:482
+#: admin/class-admin-settings.php:502
 msgid "14天"
 msgstr "14 days"
 
-#: admin/class-admin-settings.php:485
+#: admin/class-admin-settings.php:505
 msgid "30天"
 msgstr "30 days"
 
-#: admin/class-admin-settings.php:488
+#: admin/class-admin-settings.php:508
 msgid "90天"
 msgstr "90 days"
 
-#: admin/class-admin-settings.php:491
+#: admin/class-admin-settings.php:511
 msgid "180天"
 msgstr "180 days"
 
-#: admin/class-admin-settings.php:494
+#: admin/class-admin-settings.php:514
 msgid "365天"
 msgstr "365 days"
 
-#: admin/class-admin-settings.php:497
+#: admin/class-admin-settings.php:517
 msgid "永久保存"
 msgstr "Permanent preservation"
 
-#: admin/class-admin-settings.php:501
+#: admin/class-admin-settings.php:521
 msgid "日志保留时长，过期日志将自动删除"
 msgstr "Log retention period; expired logs will be automatically deleted"
 
-#: admin/class-admin-settings.php:509
+#: admin/class-admin-settings.php:529
 msgid "检测为垃圾评论后对访客的提醒"
 msgstr "Reminder to visitors after detecting spam comments"
 
-#: admin/class-admin-settings.php:515
+#: admin/class-admin-settings.php:535
 msgid "当评论被AI检测为垃圾评论时显示给访客的提醒文字，留空则不提醒"
 msgstr ""
 "When a comment is detected by AI as spam, this is the warning message "
 "displayed to visitors. Leave blank to disable the warning"
 
-#: admin/class-admin-settings.php:523
+#: admin/class-admin-settings.php:543
 msgid "检测失败后对访客的提醒"
 msgstr "Reminder to visitors after detection failure"
 
-#: admin/class-admin-settings.php:529
+#: admin/class-admin-settings.php:549
 msgid "当AI检测失败（API错误、超时等）时显示给访客的提醒文字，留空则不提醒"
 msgstr ""
 "When AI detection fails (API errors, timeouts, etc.), display this alert "
 "text to visitors. Leave blank to suppress the alert"
 
-#: admin/class-admin-settings.php:573
+#: admin/class-admin-settings.php:593
 msgid "权限不足"
 msgstr "Insufficient permissions"
 
-#~ msgid ""
-#~ "当前 WordPress 版本没有内置 AI Client，本插件需要 WordPress 7.0 或更高版本"
-#~ "才能工作。"
-#~ msgstr ""
-#~ "The current WordPress version does not include the built-in AI Client. "
-#~ "This plugin requires WordPress 7.0 or higher to work."
-
-#~ msgid ""
-#~ "尚未配置 AI 供应商凭据，评论检测功能暂不生效。请前往后台“设置 → 连接”页面"
-#~ "配置至少一个 AI 供应商。"
-#~ msgstr ""
-#~ "No AI provider credentials have been configured yet, so comment detection "
-#~ "is not active. Please go to the \"Settings → Connectors\" screen in the "
-#~ "admin dashboard and configure at least one AI provider."
-
-#~ msgid ""
-#~ "本插件通过 WordPress 内置 AI Client 调用 AI，无需单独配置 API 端点或密钥。"
-#~ "AI 供应商凭据可在后台“设置 → 连接”页面统一管理。"
-#~ msgstr ""
-#~ "This plugin calls AI through the built-in WordPress AI Client, with no "
-#~ "need to configure API endpoints or keys separately. AI provider "
-#~ "credentials can be managed centrally on the \"Settings → Connectors\" "
-#~ "screen in the admin dashboard."
-
-#~ msgid ""
-#~ "尚未配置 AI 供应商凭据，评论检测功能暂不生效。请前往后台“设置 → 连接”页面"
-#~ "配置至少一个支持文本生成的 AI 供应商。"
-#~ msgstr ""
-#~ "No AI provider credentials have been configured yet, so comment detection "
-#~ "is not active. Please go to the \"Settings → Connectors\" screen in the "
-#~ "admin dashboard and configure at least one AI provider that supports text "
-#~ "generation."
-
-#~ msgid "选择用于评论评分的 AI 提供商，仅列出已配置凭据且支持文本生成的提供商"
-#~ msgstr ""
-#~ "The AI provider used for comment scoring. Only providers with configured "
-#~ "credentials that support text generation are listed"
-
-#~ msgid "评论者名称或评论内容为空"
-#~ msgstr "Commenter name or comment content is empty"
-
-#~ msgid "API 端点无效"
-#~ msgstr "Invalid API endpoint"
+#, php-format
 
 #, php-format
-#~ msgid "API 返回错误状态码 %1$d: %2$s"
-#~ msgstr "API returned error status code %1$d: %2$s"
-
-#~ msgid "API 响应格式无效"
-#~ msgstr "API response format is invalid"
-
-#, php-format
-#~ msgid "AI 返回的内容不是有效分数: %s"
-#~ msgstr "The content returned by AI is not a valid score: %s"
-
-#~ msgid "API 端点不能为空"
-#~ msgstr "The API endpoint cannot be empty"
-
-#~ msgid "API 端点必须是有效的 URL"
-#~ msgstr "The API endpoint must be a valid URL"
-
-#~ msgid "API 密钥不能为空"
-#~ msgstr "The API key cannot be empty"
-
-#~ msgid "模型 ID 不能为空"
-#~ msgstr "The Model ID cannot be empty"
-
-#~ msgid "API 状态码"
-#~ msgstr "API Status Codes"
-
-#~ msgid "API 端点"
-#~ msgstr "API Endpoint"
-
-#~ msgid ""
-#~ "支持 OpenAI 与 Claude，默认自动补全 /v1/chat/completions，若使用 Claude 请"
-#~ "填写 /v1/messages，# 结尾表示禁用自动补全"
-#~ msgstr ""
-#~ "Supports OpenAI and Claude, with auto-completion enabled by default for /"
-#~ "v1/chat/completions. If using Claude, please fill in /v1/messages. Adding "
-#~ "# at the end disables auto-completion."
-
-#~ msgid "API 密钥"
-#~ msgstr "API Key"
-
-#~ msgid "切换密钥可见性"
-#~ msgstr "Toggle Key Visibility"
-
-#~ msgid "API 访问密钥"
-#~ msgstr "API Access Key"
-
-#~ msgid "模型 ID"
-#~ msgstr "Model ID"
-
-#~ msgid "要使用的 AI 模型 ID"
-#~ msgstr "The AI model ID to be used"
-
-#~ msgid "API 请求超时时间"
-#~ msgstr "API Request Timeout"
-
-#~ msgid "超时后的操作"
-#~ msgstr "Operation after timeout"
-
-#~ msgid "当 API 超时或返回无效数据时的处理方式"
-#~ msgstr "Handling API Timeouts or Invalid Responses"
-
-#~ msgid ""
-#~ "OpenAI 格式的 API 端点地址，自动补全 /v1/chat/completions，/ 结尾忽略 v1，"
-#~ "# 结尾不补全"
-#~ msgstr ""
-#~ "OpenAI format API endpoint address, automatically completes /v1/chat/"
-#~ "completions, ignores v1 if ending with /, does not complete if ending "
-#~ "with #"
-
-#~ msgid "OpenAI 格式的 API 端点地址"
-#~ msgstr "OpenAI Format API Endpoint Address"

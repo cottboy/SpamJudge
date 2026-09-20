@@ -103,6 +103,11 @@ class SpamJudge_Admin_Settings {
             }
         }
 
+        // 模型 ID：自由文本，留空表示使用提供商的默认模型
+        if ( isset( $input['model_id'] ) ) {
+            $sanitized['model_id'] = sanitize_text_field( $input['model_id'] );
+        }
+
         // 系统提示词
         if ( isset( $input['system_prompt'] ) ) {
             $sanitized['system_prompt'] = sanitize_textarea_field( $input['system_prompt'] );
@@ -371,6 +376,21 @@ class SpamJudge_Admin_Settings {
                         </select>
                         <p class="description">
                             <?php esc_html_e( '选择用于评论评分的 AI 提供商，仅列出已配置凭据的提供商', 'spamjudge' ); ?>
+                        </p>
+                    </td>
+                </tr>
+
+                <!-- 模型 ID -->
+                <tr>
+                    <th scope="row">
+                        <label for="model_id"><?php esc_html_e( '模型 ID', 'spamjudge' ); ?></label>
+                    </th>
+                    <td>
+                        <input type="text" id="model_id" name="spamjudge_settings[model_id]"
+                               value="<?php echo esc_attr( $settings['model_id'] ?? '' ); ?>"
+                               class="regular-text">
+                        <p class="description">
+                            <?php esc_html_e( '留空使用提供商的默认模型，填写模型 ID 可指定要使用的模型', 'spamjudge' ); ?>
                         </p>
                     </td>
                 </tr>
