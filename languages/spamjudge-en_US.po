@@ -5,7 +5,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: SpamJudge 2.0.0\n"
+"Project-Id-Version: SpamJudge 1.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/spamjudge\n"
 "POT-Creation-Date: 2026-09-20T00:00:00+00:00\n"
 "PO-Revision-Date: 2026-03-01 23:12+0800\n"

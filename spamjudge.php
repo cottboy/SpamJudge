@@ -2,7 +2,7 @@
 /**
  * Plugin Name: SpamJudge
  * Description: Using AI large language models to automatically detect and filter spam comments, powered by the WordPress AI Client.
- * Version: 2.0.0
+ * Version: 1.2.0
  * Requires at least: 7.0
  * Author: cottboy
  * Author URI: https://www.joyfamily.top/
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // 定义插件常量
-define( 'SPAMJUDGE_VERSION', '2.0.0' );
+define( 'SPAMJUDGE_VERSION', '1.2.0' );
 define( 'SPAMJUDGE_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SPAMJUDGE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'SPAMJUDGE_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
@@ -88,7 +88,7 @@ register_activation_hook( __FILE__, 'spamjudge_activate' );
  * 版本号变化时执行一次性的数据清理与迁移，清理旧版本遗留的无效数据：
  * - 删除已弃用的 temperature 设置
  * - 删除已弃用的供应商相关设置（api_endpoint、api_key），供应商改由 WordPress 内置 AI Client 管理；
- *   model_id 沿用旧值（2.0.0 起重新作为"自定义模型"设置项，空值表示使用提供商默认模型）
+ *   model_id 沿用旧值（1.2.0 起重新作为"自定义模型"设置项，空值表示使用提供商默认模型）
  * - 将旧设置中的 timeout_action 迁移为 error_action
  * - 删除日志表中已弃用的 api_status_code 列
  */
@@ -107,7 +107,7 @@ function spamjudge_maybe_upgrade() {
         $settings_changed = true;
     }
 
-    // 删除已弃用的供应商相关设置（2.0.0 起由 WordPress 内置 AI Client 管理）
+    // 删除已弃用的供应商相关设置（1.2.0 起由 WordPress 内置 AI Client 管理）
     // 注意：model_id 不在删除之列，旧版本的模型 ID 沿用为新的"自定义模型"设置
     foreach ( array( 'api_endpoint', 'api_key' ) as $deprecated_key ) {
         if ( isset( $settings[ $deprecated_key ] ) ) {
@@ -116,7 +116,7 @@ function spamjudge_maybe_upgrade() {
         }
     }
 
-    // 将旧设置中的 timeout_action 迁移为 error_action（2.0.0 起语义覆盖所有检测失败场景）
+    // 将旧设置中的 timeout_action 迁移为 error_action（1.2.0 起语义覆盖所有检测失败场景）
     if ( isset( $settings['timeout_action'] ) ) {
         if ( ! isset( $settings['error_action'] ) ) {
             $settings['error_action'] = $settings['timeout_action'];
