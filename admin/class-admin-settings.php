@@ -542,7 +542,7 @@ class SpamJudge_Admin_Settings {
                 </tr>
 
                 <!-- 限流 -->
-                <tr>
+                <tr class="spamjudge-rate-limit">
                     <th scope="row">
                         <label for="rate_limit_window"><?php esc_html_e( '限流', 'spamjudge' ); ?></label>
                     </th>

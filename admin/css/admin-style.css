@@ -140,6 +140,20 @@
     max-width: 500px;
 }
 
+/* 限流行内控件保持小宽度，不撑满整行 */
+.spamjudge-rate-limit select {
+    width: auto;
+    max-width: none;
+    min-width: 110px;
+    vertical-align: middle;
+}
+
+.spamjudge-rate-limit input[type="number"] {
+    width: 110px;
+    max-width: none;
+    vertical-align: middle;
+}
+
 /* 表单说明文字样式 */
 .form-table .description {
     margin-top: 5px;

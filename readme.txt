@@ -20,18 +20,28 @@ SpamJudge uses AI large language models to automatically detect and filter spam 
 * AI provider credentials are managed centrally by WordPress under "Settings → Connectors"
 * Customizable AI prompts to adjust scoring criteria based on the characteristics of the website
 * Configurable score thresholds for flexible control over filtering intensity
+* Rate limiting by input characters (token bucket): set how many characters may be sent to the AI per time window
 * Detailed logging to track the processing of each comment
 
 = Workflow =
 
 1. Visitor submits a comment
-2. The plugin intercepts the comment and sends it to the AI for scoring
-3. The AI returns a score between 0 and 100 (0 = spam, 100 = high quality)
-4. The comment is automatically processed based on the score and threshold:
+2. The plugin intercepts the comment and checks the rate limit quota first
+3. The plugin sends it to the AI for scoring (skipped when paused or quota exhausted)
+4. The AI returns a score between 0 and 100 (0 = spam, 100 = high quality)
+5. The comment is automatically processed based on the score and threshold:
    * Score >= threshold: approved
    * Score < threshold: moved to spam or moved to moderation based on settings
-   * Timeout/error: moved to moderation or directly approved based on settings
-5. Detailed logs are recorded for administrators to review
+   * Timeout/error/rate limited: moved to moderation or directly approved based on settings
+6. Detailed logs are recorded for administrators to review
+
+= Rate limiting =
+
+The "Rate limiting" setting controls how many input characters may be sent to the AI per time window (30 minutes up to 1 month, default 1 day). Characters are counted per character (one English letter or one Chinese character counts as one), including the system prompt, commenter name and comment content. The fixed part (system prompt plus template) is cached and refreshed when the system prompt changes.
+
+* -1 (default): unlimited, every comment is sent to the AI
+* 0: paused, no requests are sent to the AI and all comments are handled as detection failures
+* Positive number: token bucket quota per window; once exhausted, further comments are handled as detection failures until quota refills
 
 = Default system prompt in the current version =
 
@@ -102,6 +112,10 @@ Comment data will be sent to the AI provider you configured in WordPress for sco
 = How much additional wait time will be added when submitting a comment? =
 
 It adds about 3 seconds, depending on the service provider and model used. Using a non-thinking model can effectively reduce wait time.
+
+= How does rate limiting work? =
+
+Each comment consumes input characters (system prompt + commenter name + comment content). When the quota for the current time window is exhausted, or the limit is set to 0 (paused), the plugin skips the AI request and handles the comment according to the "Action after detection failure" setting.
 
 == Screenshots ==
 
