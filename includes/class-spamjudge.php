@@ -93,6 +93,8 @@ If you output anything other than a single number, the system will fail.',
             'log_retention' => 90,
             'spam_message' => '',
             'error_message' => '',
+            'rate_limit_window' => 86400,
+            'rate_limit_chars' => -1,
         );
         
         $this->settings = wp_parse_args( $this->settings, $defaults );
@@ -128,8 +130,31 @@ If you output anything other than a single number, the system will fail.',
             return $commentdata;
         }
 
-        // 调用 AI 检查评论
-        $result = $api_client->check_comment( $comment_author, $comment_content );
+        // 限流检查（令牌桶，惰性计算）：配额不足或已暂停时不再请求 AI，直接走检测失败分支
+        $rate_limited = false;
+        $rate_limit = SpamJudge_Rate_Limiter::get_limit_chars( $this->settings );
+
+        if ( $rate_limit !== -1 ) {
+            $need_chars = SpamJudge_Rate_Limiter::estimate_need(
+                isset( $this->settings['system_prompt'] ) ? $this->settings['system_prompt'] : '',
+                $comment_author,
+                $comment_content
+            );
+
+            if ( ! SpamJudge_Rate_Limiter::try_consume( $need_chars, $this->settings ) ) {
+                $rate_limited = true;
+            }
+        }
+
+        // 调用 AI 检查评论（限流命中时跳过真实请求）
+        if ( $rate_limited ) {
+            $result = array(
+                'success' => false,
+                'score' => null,
+            );
+        } else {
+            $result = $api_client->check_comment( $comment_author, $comment_content );
+        }
 
         // 初始化日志记录器
         $logger = new SpamJudge_Comment_Logger();

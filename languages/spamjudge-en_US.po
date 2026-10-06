@@ -255,6 +255,50 @@ msgstr ""
 msgid "权限不足"
 msgstr "Insufficient permissions"
 
+#: includes/class-spamjudge-rate-limiter.php:40 admin/class-admin-settings.php:540
+msgid "30分钟"
+msgstr "30 minutes"
+
+#: includes/class-spamjudge-rate-limiter.php:41 admin/class-admin-settings.php:540
+msgid "1小时"
+msgstr "1 hour"
+
+#: includes/class-spamjudge-rate-limiter.php:42 admin/class-admin-settings.php:540
+msgid "4小时"
+msgstr "4 hours"
+
+#: includes/class-spamjudge-rate-limiter.php:43 admin/class-admin-settings.php:540
+msgid "12小时"
+msgstr "12 hours"
+
+#: includes/class-spamjudge-rate-limiter.php:48 admin/class-admin-settings.php:540
+msgid "1个月"
+msgstr "1 month"
+
+#: admin/class-admin-settings.php:540
+msgid "限流"
+msgstr "Rate limiting"
+
+#: admin/class-admin-settings.php:540
+msgid "每"
+msgstr "Every"
+
+#: admin/class-admin-settings.php:540
+msgid "允许请求"
+msgstr "allow"
+
+#: admin/class-admin-settings.php:540
+msgid "个字符"
+msgstr "characters"
+
+#: admin/class-admin-settings.php:540
+msgid "按发送给 AI 的输入字符数统计（含系统提示词、评论者名称与评论内容），-1 表示无限制，0 表示暂停所有 AI 请求，配额耗尽后按检测失败处理"
+msgstr "Counts input characters sent to the AI (including system prompt, commenter name and comment content); -1 means unlimited, 0 pauses all AI requests, and comments are handled as detection failures once the quota is exhausted"
+
+#: admin/class-admin-settings.php:215
+msgid "限流字符数必须是不小于 -1 的整数"
+msgstr "Rate limit characters must be an integer no less than -1"
+
 #, php-format
 
 #, php-format

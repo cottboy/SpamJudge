@@ -112,7 +112,6 @@ class SpamJudge_Admin_Settings {
         if ( isset( $input['system_prompt'] ) ) {
             $sanitized['system_prompt'] = sanitize_textarea_field( $input['system_prompt'] );
         }
-        
         // 分数阈值
         if ( isset( $input['score_threshold'] ) ) {
             $threshold = intval( $input['score_threshold'] );
@@ -139,6 +138,24 @@ class SpamJudge_Admin_Settings {
         // 日志保留时间
         if ( isset( $input['log_retention'] ) ) {
             $sanitized['log_retention'] = intval( $input['log_retention'] );
+        }
+
+        // 限流时间窗口：白名单校验，非法值回退为默认 1 天
+        if ( isset( $input['rate_limit_window'] ) ) {
+            $window = intval( $input['rate_limit_window'] );
+            $allowed_windows = array( 1800, 3600, 14400, 43200, 86400, 259200, 604800, 1209600, 2592000 );
+            $sanitized['rate_limit_window'] = in_array( $window, $allowed_windows, true ) ? $window : 86400;
+        }
+
+        // 限流字符数：-1 无限制，0 暂停所有请求，正数为配额；小于 -1 视为无限制
+        if ( isset( $input['rate_limit_chars'] ) ) {
+            $chars = intval( $input['rate_limit_chars'] );
+            $sanitized['rate_limit_chars'] = $chars < -1 ? -1 : $chars;
+        }
+
+        // 系统提示词变更时刷新固定字符数缓存
+        if ( isset( $sanitized['system_prompt'] ) && class_exists( 'SpamJudge_Rate_Limiter' ) ) {
+            SpamJudge_Rate_Limiter::refresh_fixed_cache( $sanitized['system_prompt'] );
         }
 
         // 检测为垃圾评论后对访客的提醒
@@ -196,6 +213,7 @@ class SpamJudge_Admin_Settings {
                     'systemPromptEmpty' => __( '系统提示词不能为空', 'spamjudge' ),
                     'thresholdInvalid' => __( '分数阈值必须在 0-100 之间', 'spamjudge' ),
                     'timeoutInvalid' => __( '超时时间必须至少为 5 秒', 'spamjudge' ),
+                    'rateLimitInvalid' => __( '限流字符数必须是不小于 -1 的整数', 'spamjudge' ),
                 ),
             )
         );
@@ -519,6 +537,31 @@ class SpamJudge_Admin_Settings {
                         </select>
                         <p class="description">
                             <?php esc_html_e( '日志保留时长，过期日志将自动删除', 'spamjudge' ); ?>
+                        </p>
+                    </td>
+                </tr>
+
+                <!-- 限流 -->
+                <tr>
+                    <th scope="row">
+                        <label for="rate_limit_window"><?php esc_html_e( '限流', 'spamjudge' ); ?></label>
+                    </th>
+                    <td>
+                        <?php esc_html_e( '每', 'spamjudge' ); ?>
+                        <select id="rate_limit_window" name="spamjudge_settings[rate_limit_window]">
+                            <?php foreach ( SpamJudge_Rate_Limiter::get_window_choices() as $seconds => $label ) : ?>
+                                <option value="<?php echo esc_attr( $seconds ); ?>" <?php selected( intval( $settings['rate_limit_window'] ?? 86400 ), intval( $seconds ) ); ?>>
+                                    <?php echo esc_html( $label ); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <?php esc_html_e( '允许请求', 'spamjudge' ); ?>
+                        <input type="number" id="rate_limit_chars" name="spamjudge_settings[rate_limit_chars]"
+                               value="<?php echo esc_attr( $settings['rate_limit_chars'] ?? -1 ); ?>"
+                               min="-1" step="1" required>
+                        <?php esc_html_e( '个字符', 'spamjudge' ); ?>
+                        <p class="description">
+                            <?php esc_html_e( '按发送给 AI 的输入字符数统计（含系统提示词、评论者名称与评论内容），-1 表示无限制，0 表示暂停所有 AI 请求，配额耗尽后按检测失败处理', 'spamjudge' ); ?>
                         </p>
                     </td>
                 </tr>

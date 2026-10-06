@@ -70,6 +70,16 @@
                 errorMessages.push(SpamJudge.strings.timeoutInvalid);
             }
 
+            // 验证限流字符数（-1 无限制，0 暂停，不设上限）
+            var rateLimitInput = $('#rate_limit_chars');
+            if (rateLimitInput.length) {
+                var rateLimit = parseInt(rateLimitInput.val());
+                if (isNaN(rateLimit) || rateLimit < -1) {
+                    isValid = false;
+                    errorMessages.push(SpamJudge.strings.rateLimitInvalid);
+                }
+            }
+
             // 如果验证失败，显示错误消息
             if (!isValid) {
                 e.preventDefault();

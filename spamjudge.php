@@ -76,6 +76,8 @@ If you output anything other than a single number, the system will fail.',
         'log_retention' => 90, // 天数，0 表示不保存，-1 表示永久保存
         'spam_message' => '', // 检测为垃圾评论后对访客的提醒，为空则不提醒
         'error_message' => '', // 检测失败后对访客的提醒，为空则不提醒
+        'rate_limit_window' => 86400, // 限流时间窗口（秒），默认1天
+        'rate_limit_chars' => -1, // 限流字符数，-1 无限制，0 暂停所有请求
     );
     
     add_option( 'spamjudge_settings', $default_options );
@@ -155,6 +157,7 @@ add_action( 'init', 'spamjudge_maybe_upgrade' );
  * 加载插件核心文件
  */
 require_once SPAMJUDGE_PLUGIN_DIR . 'includes/class-spamjudge-api-client.php';
+require_once SPAMJUDGE_PLUGIN_DIR . 'includes/class-spamjudge-rate-limiter.php';
 require_once SPAMJUDGE_PLUGIN_DIR . 'includes/class-spamjudge-comment-logger.php';
 require_once SPAMJUDGE_PLUGIN_DIR . 'includes/class-spamjudge.php';
 
