@@ -128,6 +128,7 @@ Each comment consumes input characters (system prompt + commenter name + comment
 * Switched to the built-in WordPress AI Client (WordPress 7.0+), no more provider/endpoint/key settings in the plugin
 * AI provider credentials are now managed by WordPress under "Settings → Connectors"
 * New Model ID setting: leave empty to use the provider's default model, or enter a custom model; existing model ID values from older versions carry over automatically
+* New rate limiting setting: limit how many input characters may be sent to the AI per time window (token bucket, -1 means unlimited, 0 pauses all AI requests)
 
 = 1.1.0（2025-12-03） =
 * Compatible with the /v1/responses endpoint
@@ -140,4 +141,4 @@ Each comment consumes input characters (system prompt + commenter name + comment
 == Upgrade Notice ==
 
 = 1.2.0 =
-Requires WordPress 7.0+. The plugin now uses the built-in WordPress AI Client; configure your AI provider under "Settings → Connectors".
+Requires WordPress 7.0+. The plugin now uses the built-in WordPress AI Client; configure your AI provider under "Settings → Connectors". The new rate limiting setting defaults to unlimited (-1), so no action is needed unless you want to cap AI usage.
