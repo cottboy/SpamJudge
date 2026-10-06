@@ -267,10 +267,6 @@ msgid "限流"
 msgstr ""
 
 #: admin/class-admin-settings.php:540
-msgid "每"
-msgstr ""
-
-#: admin/class-admin-settings.php:540
 msgid "允许请求"
 msgstr ""
 

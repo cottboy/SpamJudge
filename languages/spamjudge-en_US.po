@@ -280,10 +280,6 @@ msgid "限流"
 msgstr "Rate limiting"
 
 #: admin/class-admin-settings.php:540
-msgid "每"
-msgstr "Every"
-
-#: admin/class-admin-settings.php:540
 msgid "允许请求"
 msgstr "allow"
 

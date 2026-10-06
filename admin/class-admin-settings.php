@@ -547,7 +547,7 @@ class SpamJudge_Admin_Settings {
                         <label for="rate_limit_window"><?php esc_html_e( '限流', 'spamjudge' ); ?></label>
                     </th>
                     <td>
-                        <?php esc_html_e( '每', 'spamjudge' ); ?>
+                        <div class="spamjudge-rate-limit-inline">
                         <select id="rate_limit_window" name="spamjudge_settings[rate_limit_window]">
                             <?php foreach ( SpamJudge_Rate_Limiter::get_window_choices() as $seconds => $label ) : ?>
                                 <option value="<?php echo esc_attr( $seconds ); ?>" <?php selected( intval( $settings['rate_limit_window'] ?? 86400 ), intval( $seconds ) ); ?>>
@@ -560,6 +560,7 @@ class SpamJudge_Admin_Settings {
                                value="<?php echo esc_attr( $settings['rate_limit_chars'] ?? -1 ); ?>"
                                min="-1" step="1" required>
                         <?php esc_html_e( '个字符', 'spamjudge' ); ?>
+                        </div>
                         <p class="description">
                             <?php esc_html_e( '按发送给 AI 的输入字符数统计（含系统提示词、评论者名称与评论内容），-1 表示无限制，0 表示暂停所有 AI 请求，配额耗尽后按检测失败处理', 'spamjudge' ); ?>
                         </p>
