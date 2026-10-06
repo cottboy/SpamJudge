@@ -199,7 +199,7 @@ class SpamJudge_Rate_Limiter {
      * - 限制为 -1 时直接放行，不触碰桶状态
      * - 限制为 0 时直接拒绝，不触碰桶状态
      * - 桶状态缺失或配额/窗口变化时重置为满桶
-     * - 每次调用按流逝时间惰性补充令牌：补充量 = 流逝秒数 * (配额 / 窗口)
+     * - 每次调用按流逝时间惰性补充令牌：补充量 = 流逝秒数 * (配额 / 窗口)，补充后四舍五入取整
      *
      * @param int   $need_chars 本次请求需要的字符数
      * @param array $settings 设置数组，为空时从选项中加载
@@ -242,14 +242,15 @@ class SpamJudge_Rate_Limiter {
             || intval( $bucket['window'] ) !== $window
         ) {
             $bucket = array(
-                'tokens' => (float) $capacity,
+                'tokens' => $capacity,
                 'updated_at' => $now,
                 'capacity' => $capacity,
                 'window' => $window,
             );
         }
 
-        $tokens = (float) $bucket['tokens'];
+        // 历史桶中可能存有小数，读出时四舍五入取整
+        $tokens = (int) round( (float) $bucket['tokens'] );
         $updated_at = intval( $bucket['updated_at'] );
 
         // 惰性补充令牌
@@ -260,7 +261,8 @@ class SpamJudge_Rate_Limiter {
 
         if ( $elapsed > 0 && $window > 0 ) {
             $rate = $capacity / $window;
-            $tokens = min( (float) $capacity, $tokens + $elapsed * $rate );
+            // 补充后四舍五入取整，令牌数始终为整数
+            $tokens = (int) min( $capacity, round( $tokens + $elapsed * $rate ) );
         }
 
         // 配额不足：保存补充后的状态并拒绝
