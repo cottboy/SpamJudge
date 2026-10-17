@@ -215,7 +215,7 @@ class SpamJudge_Admin_Settings {
                     'thresholdInvalid' => __( '分数阈值必须在 0-100 之间', 'spamjudge' ),
                     'timeoutInvalid' => __( '超时时间必须至少为 5 秒', 'spamjudge' ),
                     'rateLimitInvalid' => __( '限流字符数必须是不小于 -1 的整数', 'spamjudge' ),
-                    'defaultModel' => __( '默认（由 WordPress 自动选择）', 'spamjudge' ),
+                    'defaultModel' => __( '默认', 'spamjudge' ),
                     'loadingModels' => __( '正在读取模型清单...', 'spamjudge' ),
                     'modelsLoadFailed' => __( '模型清单读取失败，请检查网络后刷新页面重试', 'spamjudge' ),
                 ),
@@ -391,7 +391,7 @@ class SpamJudge_Admin_Settings {
                     <td>
                         <select id="provider_id" name="spamjudge_settings[provider_id]">
                             <option value="" <?php selected( $settings['provider_id'] ?? '', '' ); ?>>
-                                <?php esc_html_e( '自动选择（由 WordPress 决定）', 'spamjudge' ); ?>
+                                <?php esc_html_e( '默认', 'spamjudge' ); ?>
                             </option>
                             <?php foreach ( $available_providers as $provider_id => $provider_name ) : ?>
                                 <option value="<?php echo esc_attr( $provider_id ); ?>" <?php selected( $settings['provider_id'] ?? '', $provider_id ); ?>>
@@ -412,7 +412,7 @@ class SpamJudge_Admin_Settings {
                     </th>
                     <td>
                         <select id="model_id" name="spamjudge_settings[model_id]" data-saved-model="<?php echo esc_attr( $saved_model ); ?>">
-                            <option value=""><?php esc_html_e( '默认（由 WordPress 自动选择）', 'spamjudge' ); ?></option>
+                            <option value=""><?php esc_html_e( '默认', 'spamjudge' ); ?></option>
                             <?php if ( '' !== $saved_model ) : ?>
                                 <option value="<?php echo esc_attr( $saved_model ); ?>" selected><?php echo esc_html( $saved_model ); ?></option>
                             <?php endif; ?>

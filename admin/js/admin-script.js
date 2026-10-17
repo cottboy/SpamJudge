@@ -94,7 +94,7 @@
                         $group.append($('<option>').val(id).text(name || id));
                     });
 
-                    // 提供商为"自动选择"时按服务商分组，选定具体服务商时只列它的模型
+                    // 提供商选“默认”时按服务商分组，选定具体服务商时只列它的模型
                     return providerId === '' ? $group : $group.children();
                 };
 

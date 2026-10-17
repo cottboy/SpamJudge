@@ -109,10 +109,6 @@ msgstr "&rsaquo;"
 msgid "AI 提供商"
 msgstr "AI Provider"
 
-#: admin/class-admin-settings.php:394
-msgid "自动选择（由 WordPress 决定）"
-msgstr "Automatic (decided by WordPress)"
-
 #: admin/class-admin-settings.php:403
 msgid "选择用于评论评分的 AI 提供商，仅列出已配置凭据的提供商"
 msgstr ""
@@ -122,10 +118,6 @@ msgstr ""
 #: admin/class-admin-settings.php:411
 msgid "AI 模型"
 msgstr "AI Model"
-
-#: admin/class-admin-settings.php:218 admin/class-admin-settings.php:415
-msgid "默认（由 WordPress 自动选择）"
-msgstr "Default (chosen automatically by WordPress)"
 
 #: admin/class-admin-settings.php:421
 msgid "模型清单由页面联网向服务商读取，只列出可用于评论评分的模型；选定具体提供商后仅列出它的模型"
@@ -308,3 +300,7 @@ msgstr "Rate limit characters must be an integer no less than -1"
 #, php-format
 
 #, php-format
+
+#: admin/class-admin-settings.php:218 admin/class-admin-settings.php:394 admin/class-admin-settings.php:415
+msgid "默认"
+msgstr "Default"

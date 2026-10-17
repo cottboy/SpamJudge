@@ -46,7 +46,7 @@ The "Rate limiting" setting controls how many input characters may be sent to th
 
 = Model selection =
 
-The "AI Model" dropdown on the settings page is filled by asking each configured provider for its models, which happens over the network while the page is already displayed. Models that support text generation are listed; when a specific provider is selected only its models are shown, and when the provider is left on automatic the models are grouped by provider. Choosing the default lets WordPress pick the model. If the fetch fails (no network access, invalid key), the dropdown keeps the default entry and any model ID you had saved.
+The "AI Model" dropdown on the settings page is filled by asking each configured provider for its models, which happens over the network while the page is already displayed. Models that support text generation are listed; when a specific provider is selected only its models are shown, and when the provider is left on the default the models are grouped by provider. Leaving the model on the default lets WordPress pick it. If the fetch fails (no network access, invalid key), the dropdown keeps the default entry and any model ID you had saved.
 
 = Default system prompt in the current version =
 

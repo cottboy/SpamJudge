@@ -106,20 +106,12 @@ msgstr ""
 msgid "AI 提供商"
 msgstr ""
 
-#: admin/class-admin-settings.php:394
-msgid "自动选择（由 WordPress 决定）"
-msgstr ""
-
 #: admin/class-admin-settings.php:403
 msgid "选择用于评论评分的 AI 提供商，仅列出已配置凭据的提供商"
 msgstr ""
 
 #: admin/class-admin-settings.php:411
 msgid "AI 模型"
-msgstr ""
-
-#: admin/class-admin-settings.php:218 admin/class-admin-settings.php:415
-msgid "默认（由 WordPress 自动选择）"
 msgstr ""
 
 #: admin/class-admin-settings.php:421
@@ -292,4 +284,8 @@ msgstr ""
 
 #: admin/class-admin-settings.php:217
 msgid "限流字符数必须是不小于 -1 的整数"
+msgstr ""
+
+#: admin/class-admin-settings.php:218 admin/class-admin-settings.php:394 admin/class-admin-settings.php:415
+msgid "默认"
 msgstr ""
