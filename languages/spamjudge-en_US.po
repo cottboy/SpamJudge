@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SpamJudge 1.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/spamjudge\n"
-"POT-Creation-Date: 2026-09-20T00:00:00+00:00\n"
+"POT-Creation-Date: 2026-10-18T00:00:00+00:00\n"
 "PO-Revision-Date: 2026-03-01 23:12+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -17,281 +17,291 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.8\n"
 
-#: spamjudge.php:204 admin/class-admin-settings.php:229
+#: spamjudge.php:207 admin/class-admin-settings.php:251
 msgid "设置"
 msgstr "Settings"
 
-#: includes/class-spamjudge.php:361
+#: includes/class-spamjudge.php:386
 msgid "评论提醒"
 msgstr "Comment Notification"
 
-#: admin/class-admin-settings.php:62 admin/class-admin-settings.php:63
+#: admin/class-admin-settings.php:63 admin/class-admin-settings.php:64
 msgid "SpamJudge"
 msgstr "SpamJudge"
 
-#: admin/class-admin-settings.php:193
+#: admin/class-admin-settings.php:211
 msgid "处理中..."
 msgstr "Processing..."
 
-#: admin/class-admin-settings.php:194 admin/class-admin-settings.php:324
+#: admin/class-admin-settings.php:212 admin/class-admin-settings.php:346
 msgid "清空所有日志"
 msgstr "Clear all logs"
 
-#: admin/class-admin-settings.php:195
+#: admin/class-admin-settings.php:213
 msgid "表单验证失败："
 msgstr "Form validation failed:"
 
-#: admin/class-admin-settings.php:196
+#: admin/class-admin-settings.php:214
 msgid "系统提示词不能为空"
 msgstr "The system prompt cannot be left blank"
 
-#: admin/class-admin-settings.php:197
+#: admin/class-admin-settings.php:215
 msgid "分数阈值必须在 0-100 之间"
 msgstr "The score threshold must be between 0 and 100"
 
-#: admin/class-admin-settings.php:198
+#: admin/class-admin-settings.php:216
 msgid "超时时间必须至少为 5 秒"
 msgstr "The timeout period must be at least 5 seconds"
 
-#: admin/class-admin-settings.php:210
+#: admin/class-admin-settings.php:232
 msgid "您没有权限访问此页面"
 msgstr "You do not have permission to access this page"
 
-#: admin/class-admin-settings.php:226
+#: admin/class-admin-settings.php:248
 msgid "日志"
 msgstr "Log"
 
-#: admin/class-admin-settings.php:270
+#: admin/class-admin-settings.php:292
 msgid "评论者"
 msgstr "Commentator"
 
-#: admin/class-admin-settings.php:271
+#: admin/class-admin-settings.php:293
 msgid "评论内容"
 msgstr "Comment content"
 
-#: admin/class-admin-settings.php:272
+#: admin/class-admin-settings.php:294
 msgid "AI 评分"
 msgstr "AI Score"
 
-#: admin/class-admin-settings.php:273
+#: admin/class-admin-settings.php:295
 msgid "执行操作"
 msgstr "Perform the operation"
 
-#: admin/class-admin-settings.php:274
+#: admin/class-admin-settings.php:296
 msgid "时间"
 msgstr "Time"
 
-#: admin/class-admin-settings.php:281
+#: admin/class-admin-settings.php:303
 msgid "暂无日志记录"
 msgstr "No logs available"
 
-#: admin/class-admin-settings.php:301
+#: admin/class-admin-settings.php:323
 msgid "垃圾"
 msgstr "trash"
 
-#: admin/class-admin-settings.php:302
+#: admin/class-admin-settings.php:324
 msgid "通过"
 msgstr "Through"
 
-#: admin/class-admin-settings.php:303
+#: admin/class-admin-settings.php:325
 msgid "待审核"
 msgstr "Pending review"
 
-#: admin/class-admin-settings.php:333
+#: admin/class-admin-settings.php:355
 msgid "&lsaquo;"
 msgstr "&lsaquo;"
 
-#: admin/class-admin-settings.php:334
+#: admin/class-admin-settings.php:356
 msgid "&rsaquo;"
 msgstr "&rsaquo;"
 
-#: admin/class-admin-settings.php:364
+#: admin/class-admin-settings.php:389
 msgid "AI 提供商"
 msgstr "AI Provider"
 
-#: admin/class-admin-settings.php:369
+#: admin/class-admin-settings.php:394
 msgid "自动选择（由 WordPress 决定）"
 msgstr "Automatic (decided by WordPress)"
 
-#: admin/class-admin-settings.php:378
+#: admin/class-admin-settings.php:403
 msgid "选择用于评论评分的 AI 提供商，仅列出已配置凭据的提供商"
 msgstr ""
 "The AI provider used for comment scoring. Only providers with configured "
 "credentials are listed"
 
-#: admin/class-admin-settings.php:386
-msgid "模型 ID"
-msgstr "Model ID"
+#: admin/class-admin-settings.php:411
+msgid "AI 模型"
+msgstr "AI Model"
 
-#: admin/class-admin-settings.php:393
-msgid "留空使用提供商的默认模型，填写模型 ID 可指定要使用的模型"
-msgstr ""
-"Leave empty to use the provider's default model, or enter a model ID to use "
-"a specific model"
+#: admin/class-admin-settings.php:218 admin/class-admin-settings.php:415
+msgid "默认（由 WordPress 自动选择）"
+msgstr "Default (chosen automatically by WordPress)"
 
-#: admin/class-admin-settings.php:401
+#: admin/class-admin-settings.php:421
+msgid "模型清单由页面联网向服务商读取，只列出可用于评论评分的模型；选定具体提供商后仅列出它的模型"
+msgstr "The model list is fetched from the providers over the network and only lists models that can score comments. After picking a specific provider, only its models are listed."
+
+#: admin/class-admin-settings.php:219
+msgid "正在读取模型清单..."
+msgstr "Loading model list..."
+
+#: admin/class-admin-settings.php:220
+msgid "模型清单读取失败，请检查网络后刷新页面重试"
+msgstr "Failed to load the model list. Check the network and reload this page."
+
+#: admin/class-admin-settings.php:430
 msgid "系统提示词"
 msgstr "System Prompt"
 
-#: admin/class-admin-settings.php:407
+#: admin/class-admin-settings.php:436
 msgid "发送给 AI 的系统提示词，用于指导 AI 如何评分"
 msgstr "System prompts sent to AI to guide how it assigns scores"
 
-#: admin/class-admin-settings.php:415
+#: admin/class-admin-settings.php:444
 msgid "分数阈值"
 msgstr "Score threshold"
 
-#: admin/class-admin-settings.php:422
+#: admin/class-admin-settings.php:451
 msgid "低于此分数的评论将被标记为垃圾评论（0-100）"
 msgstr "Comments scoring below this threshold will be flagged as spam (0-100)."
 
-#: admin/class-admin-settings.php:430
+#: admin/class-admin-settings.php:459
 msgid "检测到垃圾评论后的操作"
 msgstr "Actions taken after detecting spam comments"
 
-#: admin/class-admin-settings.php:435
+#: admin/class-admin-settings.php:464
 msgid "移到垃圾队列"
 msgstr "Move to trash queue"
 
-#: admin/class-admin-settings.php:438 admin/class-admin-settings.php:470
+#: admin/class-admin-settings.php:467 admin/class-admin-settings.php:499
 msgid "移到待审核队列"
 msgstr "Move to pending review queue"
 
-#: admin/class-admin-settings.php:442
+#: admin/class-admin-settings.php:471
 msgid "当评论分数低于阈值时的处理方式"
 msgstr "Handling when the review score falls below the threshold"
 
-#: admin/class-admin-settings.php:450
+#: admin/class-admin-settings.php:479
 msgid "超时时间（秒）"
 msgstr "Timeout (seconds)"
 
-#: admin/class-admin-settings.php:457
+#: admin/class-admin-settings.php:486
 msgid "AI 请求超时时间"
 msgstr "AI request timeout"
 
-#: admin/class-admin-settings.php:465
+#: admin/class-admin-settings.php:494
 msgid "检测失败后的操作"
 msgstr "Action after detection failure"
 
-#: admin/class-admin-settings.php:473
+#: admin/class-admin-settings.php:502
 msgid "直接通过"
 msgstr "Directly through"
 
-#: admin/class-admin-settings.php:477
+#: admin/class-admin-settings.php:506
 msgid "当 AI 检测失败（超时、未配置供应商、返回无效数据等）时的处理方式"
 msgstr ""
 "How to handle failed AI detections (timeouts, unconfigured providers, "
 "invalid responses, etc.)"
 
-#: admin/class-admin-settings.php:485
+#: admin/class-admin-settings.php:514
 msgid "日志保留时间"
 msgstr "Log retention period"
 
-#: admin/class-admin-settings.php:490
+#: admin/class-admin-settings.php:519
 msgid "不保存"
 msgstr "Do not save"
 
-#: admin/class-admin-settings.php:493
+#: includes/class-spamjudge-rate-limiter.php:50 admin/class-admin-settings.php:522
 msgid "1天"
 msgstr "1 day"
 
-#: admin/class-admin-settings.php:496
+#: includes/class-spamjudge-rate-limiter.php:51 admin/class-admin-settings.php:525
 msgid "3天"
 msgstr "3 days"
 
-#: admin/class-admin-settings.php:499
+#: includes/class-spamjudge-rate-limiter.php:52 admin/class-admin-settings.php:528
 msgid "7天"
 msgstr "7 days"
 
-#: admin/class-admin-settings.php:502
+#: includes/class-spamjudge-rate-limiter.php:53 admin/class-admin-settings.php:531
 msgid "14天"
 msgstr "14 days"
 
-#: admin/class-admin-settings.php:505
+#: admin/class-admin-settings.php:534
 msgid "30天"
 msgstr "30 days"
 
-#: admin/class-admin-settings.php:508
+#: admin/class-admin-settings.php:537
 msgid "90天"
 msgstr "90 days"
 
-#: admin/class-admin-settings.php:511
+#: admin/class-admin-settings.php:540
 msgid "180天"
 msgstr "180 days"
 
-#: admin/class-admin-settings.php:514
+#: admin/class-admin-settings.php:543
 msgid "365天"
 msgstr "365 days"
 
-#: admin/class-admin-settings.php:517
+#: admin/class-admin-settings.php:546
 msgid "永久保存"
 msgstr "Permanent preservation"
 
-#: admin/class-admin-settings.php:521
+#: admin/class-admin-settings.php:550
 msgid "日志保留时长，过期日志将自动删除"
 msgstr "Log retention period; expired logs will be automatically deleted"
 
-#: admin/class-admin-settings.php:529
+#: admin/class-admin-settings.php:584
 msgid "检测为垃圾评论后对访客的提醒"
 msgstr "Reminder to visitors after detecting spam comments"
 
-#: admin/class-admin-settings.php:535
+#: admin/class-admin-settings.php:590
 msgid "当评论被AI检测为垃圾评论时显示给访客的提醒文字，留空则不提醒"
 msgstr ""
 "When a comment is detected by AI as spam, this is the warning message "
 "displayed to visitors. Leave blank to disable the warning"
 
-#: admin/class-admin-settings.php:543
+#: admin/class-admin-settings.php:598
 msgid "检测失败后对访客的提醒"
 msgstr "Reminder to visitors after detection failure"
 
-#: admin/class-admin-settings.php:549
+#: admin/class-admin-settings.php:604
 msgid "当AI检测失败（API错误、超时等）时显示给访客的提醒文字，留空则不提醒"
 msgstr ""
 "When AI detection fails (API errors, timeouts, etc.), display this alert "
 "text to visitors. Leave blank to suppress the alert"
 
-#: admin/class-admin-settings.php:593
+#: admin/class-admin-settings.php:648
 msgid "权限不足"
 msgstr "Insufficient permissions"
 
-#: includes/class-spamjudge-rate-limiter.php:40 admin/class-admin-settings.php:540
+#: includes/class-spamjudge-rate-limiter.php:46
 msgid "30分钟"
 msgstr "30 minutes"
 
-#: includes/class-spamjudge-rate-limiter.php:41 admin/class-admin-settings.php:540
+#: includes/class-spamjudge-rate-limiter.php:47
 msgid "1小时"
 msgstr "1 hour"
 
-#: includes/class-spamjudge-rate-limiter.php:42 admin/class-admin-settings.php:540
+#: includes/class-spamjudge-rate-limiter.php:48
 msgid "4小时"
 msgstr "4 hours"
 
-#: includes/class-spamjudge-rate-limiter.php:43 admin/class-admin-settings.php:540
+#: includes/class-spamjudge-rate-limiter.php:49
 msgid "12小时"
 msgstr "12 hours"
 
-#: includes/class-spamjudge-rate-limiter.php:48 admin/class-admin-settings.php:540
+#: includes/class-spamjudge-rate-limiter.php:54
 msgid "1个月"
 msgstr "1 month"
 
-#: admin/class-admin-settings.php:540
+#: admin/class-admin-settings.php:558
 msgid "限流"
 msgstr "Rate limiting"
 
-#: admin/class-admin-settings.php:540
+#: admin/class-admin-settings.php:569
 msgid "允许请求"
 msgstr "allow"
 
-#: admin/class-admin-settings.php:540
+#: admin/class-admin-settings.php:573
 msgid "个字符"
 msgstr "characters"
 
-#: admin/class-admin-settings.php:540
+#: admin/class-admin-settings.php:576
 msgid "按发送给 AI 的输入字符数统计（含系统提示词、评论者名称与评论内容），-1 表示无限制，0 表示暂停所有 AI 请求，配额耗尽后按检测失败处理"
 msgstr "Counts input characters sent to the AI (including system prompt, commenter name and comment content); -1 means unlimited, 0 pauses all AI requests, and comments are handled as detection failures once the quota is exhausted"
 
-#: admin/class-admin-settings.php:215
+#: admin/class-admin-settings.php:217
 msgid "限流字符数必须是不小于 -1 的整数"
 msgstr "Rate limit characters must be an integer no less than -1"
 

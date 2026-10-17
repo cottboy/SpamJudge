@@ -15,6 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use WordPress\AiClient\Providers\Http\DTO\RequestOptions;
+use WordPress\AiClient\Providers\Models\DTO\ModelRequirements;
+use WordPress\AiClient\Providers\Models\Enums\CapabilityEnum;
 
 /**
  * AI 检测客户端类
@@ -113,6 +115,55 @@ class SpamJudge_API_Client {
         }
 
         return $cache;
+    }
+
+    /**
+     * 获取各提供商支持文本生成的模型清单
+     *
+     * 模型名称与 ID 不在本地保存，核心 AI Client 需要联网向服务商查询，结果只缓存一天
+     * （站点未启用持久对象缓存时，每次查询都会真实请求服务商）。因此本方法只能在管理员
+     * 按需刷新设置页时调用，绝不能在评论提交等访客路径上调用。
+     *
+     * @return array 以提供商 ID 为键的数组，值为 array( 'name' => 提供商显示名, 'models' => array( 模型 ID => 模型显示名 ) )
+     */
+    public static function get_text_models() {
+        $result = array();
+
+        // 只查询已配置凭据的提供商，避免向未启用的提供商发起无意义的网络请求
+        $providers = self::get_available_providers();
+
+        if ( empty( $providers ) ) {
+            return $result;
+        }
+
+        $registry = \WordPress\AiClient\AiClient::defaultRegistry();
+        $requirements = new ModelRequirements( array( CapabilityEnum::textGeneration() ), array() );
+
+        foreach ( $providers as $provider_id => $provider_name ) {
+            try {
+                $models_metadata = $registry->findProviderModelsMetadataForSupport( $provider_id, $requirements );
+            } catch ( \Throwable $e ) {
+                // 联网查询失败（网络不可达、密钥无效等）时跳过该提供商
+                continue;
+            }
+
+            if ( empty( $models_metadata ) ) {
+                continue;
+            }
+
+            $models = array();
+
+            foreach ( $models_metadata as $model_metadata ) {
+                $models[ $model_metadata->getId() ] = $model_metadata->getName();
+            }
+
+            $result[ $provider_id ] = array(
+                'name'   => $provider_name,
+                'models' => $models,
+            );
+        }
+
+        return $result;
     }
 
     /**

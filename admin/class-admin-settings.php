@@ -52,6 +52,7 @@ class SpamJudge_Admin_Settings {
         // 处理 AJAX 请求
         add_action( 'wp_ajax_spamjudge_clear_logs', array( $this, 'ajax_clear_logs' ) );
         add_action( 'wp_ajax_spamjudge_get_logs', array( $this, 'ajax_get_logs' ) );
+        add_action( 'wp_ajax_spamjudge_get_models', array( $this, 'ajax_get_models' ) );
     }
     
     /**
@@ -103,7 +104,7 @@ class SpamJudge_Admin_Settings {
             }
         }
 
-        // 模型 ID：自由文本，留空表示使用提供商的默认模型
+        // 模型 ID：由设置页下拉框选择，空值表示由 WordPress 自动选择
         if ( isset( $input['model_id'] ) ) {
             $sanitized['model_id'] = sanitize_text_field( $input['model_id'] );
         }
@@ -214,6 +215,9 @@ class SpamJudge_Admin_Settings {
                     'thresholdInvalid' => __( '分数阈值必须在 0-100 之间', 'spamjudge' ),
                     'timeoutInvalid' => __( '超时时间必须至少为 5 秒', 'spamjudge' ),
                     'rateLimitInvalid' => __( '限流字符数必须是不小于 -1 的整数', 'spamjudge' ),
+                    'defaultModel' => __( '默认（由 WordPress 自动选择）', 'spamjudge' ),
+                    'loadingModels' => __( '正在读取模型清单...', 'spamjudge' ),
+                    'modelsLoadFailed' => __( '模型清单读取失败，请检查网络后刷新页面重试', 'spamjudge' ),
                 ),
             )
         );
@@ -371,6 +375,9 @@ class SpamJudge_Admin_Settings {
         // 获取当前可用的 AI 提供商列表（已配置凭据的）
         $available_providers = SpamJudge_API_Client::get_available_providers();
 
+        // 已保存的模型 ID，用于在模型清单读取到之前先保留该选项
+        $saved_model = $settings['model_id'] ?? '';
+
         ?>
         <form method="post" action="options.php">
             <?php settings_fields( 'spamjudge_settings_group' ); ?>
@@ -398,18 +405,22 @@ class SpamJudge_Admin_Settings {
                     </td>
                 </tr>
 
-                <!-- 模型 ID -->
+                <!-- AI 模型 -->
                 <tr>
                     <th scope="row">
-                        <label for="model_id"><?php esc_html_e( '模型 ID', 'spamjudge' ); ?></label>
+                        <label for="model_id"><?php esc_html_e( 'AI 模型', 'spamjudge' ); ?></label>
                     </th>
                     <td>
-                        <input type="text" id="model_id" name="spamjudge_settings[model_id]"
-                               value="<?php echo esc_attr( $settings['model_id'] ?? '' ); ?>"
-                               class="regular-text">
+                        <select id="model_id" name="spamjudge_settings[model_id]" data-saved-model="<?php echo esc_attr( $saved_model ); ?>">
+                            <option value=""><?php esc_html_e( '默认（由 WordPress 自动选择）', 'spamjudge' ); ?></option>
+                            <?php if ( '' !== $saved_model ) : ?>
+                                <option value="<?php echo esc_attr( $saved_model ); ?>" selected><?php echo esc_html( $saved_model ); ?></option>
+                            <?php endif; ?>
+                        </select>
                         <p class="description">
-                            <?php esc_html_e( '留空使用提供商的默认模型，填写模型 ID 可指定要使用的模型', 'spamjudge' ); ?>
+                            <?php esc_html_e( '模型清单由页面联网向服务商读取，只列出可用于评论评分的模型；选定具体提供商后仅列出它的模型', 'spamjudge' ); ?>
                         </p>
+                        <p class="description" id="model_status" aria-live="polite"></p>
                     </td>
                 </tr>
 
@@ -646,5 +657,22 @@ class SpamJudge_Admin_Settings {
         $logs = $logger->get_logs( $page, 20 );
         
         wp_send_json_success( array( 'logs' => $logs ) );
+    }
+
+    /**
+     * AJAX 获取各提供商可用的模型清单
+     *
+     * 该操作需要联网向服务商查询模型，耗时较长且失败率较高，因此只供设置页按需调用。
+     */
+    public function ajax_get_models() {
+        // 验证 nonce
+        check_ajax_referer( 'spamjudge_nonce', 'nonce' );
+
+        // 检查权限
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error();
+        }
+
+        wp_send_json_success( array( 'providers' => SpamJudge_API_Client::get_text_models() ) );
     }
 }

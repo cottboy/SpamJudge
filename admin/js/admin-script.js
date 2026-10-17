@@ -43,6 +43,114 @@
         });
         
         /**
+         * 模型下拉框：设置页打开后按需联网读取模型清单并填充选项
+         */
+        var $providerSelect = $('#provider_id');
+        var $modelSelect = $('#model_id');
+
+        if ($modelSelect.length) {
+            var $modelStatus = $('#model_status');
+            var modelsByProvider = null;
+            var savedModel = $modelSelect.attr('data-saved-model') || '';
+
+            /**
+             * 判断下拉框中是否已有指定值的选项
+             *
+             * @param {string} value 待查找的选项值
+             * @return {boolean} 是否存在
+             */
+            var hasOption = function (value) {
+                var found = false;
+
+                $modelSelect.find('option').each(function () {
+                    if (this.value === value) {
+                        found = true;
+                        return false;
+                    }
+                });
+
+                return found;
+            };
+
+            /**
+             * 按当前所选提供商重建模型选项
+             *
+             * @param {string} selectedValue 重建后需要选中的模型 ID
+             */
+            var fillModels = function (selectedValue) {
+                var providerId = $providerSelect.val() || '';
+                var $opts = $('<option>').val('').text(SpamJudge.strings.defaultModel);
+
+                /**
+                 * 生成某个提供商的模型选项
+                 *
+                 * @param {object} provider 提供商数据
+                 * @return {jQuery} 选项或选项分组
+                 */
+                var buildProviderOptions = function (provider) {
+                    var $group = $('<optgroup>').attr('label', provider.name);
+
+                    $.each(provider.models, function (id, name) {
+                        $group.append($('<option>').val(id).text(name || id));
+                    });
+
+                    // 提供商为"自动选择"时按服务商分组，选定具体服务商时只列它的模型
+                    return providerId === '' ? $group : $group.children();
+                };
+
+                if (modelsByProvider) {
+                    if (providerId) {
+                        if (modelsByProvider[providerId]) {
+                            $opts = $opts.add(buildProviderOptions(modelsByProvider[providerId]));
+                        }
+                    } else {
+                        $.each(modelsByProvider, function (id, provider) {
+                            $opts = $opts.add(buildProviderOptions(provider));
+                        });
+                    }
+                }
+
+                $modelSelect.empty().append($opts);
+
+                // 清单中没有的已保存模型（服务商未返回或本次读取失败）保留为选项，避免保存本页时被清掉
+                if (selectedValue && !hasOption(selectedValue)) {
+                    $modelSelect.append($('<option>').val(selectedValue).text(selectedValue));
+                }
+
+                $modelSelect.val(hasOption(selectedValue) ? selectedValue : '');
+            };
+
+            // 切换服务商后原模型未必被新服务商支持，回到默认
+            $providerSelect.on('change', function () {
+                fillModels('');
+            });
+
+            $modelStatus.text(SpamJudge.strings.loadingModels);
+
+            $.ajax({
+                url: SpamJudge.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'spamjudge_get_models',
+                    nonce: SpamJudge.nonce
+                },
+                success: function (response) {
+                    if (!response || !response.success) {
+                        $modelStatus.text(SpamJudge.strings.modelsLoadFailed);
+                        return;
+                    }
+
+                    modelsByProvider = response.data.providers;
+                    $modelStatus.text('');
+                    fillModels(savedModel);
+                },
+                error: function () {
+                    $modelStatus.text(SpamJudge.strings.modelsLoadFailed);
+                }
+            });
+        }
+
+        /**
          * 表单验证
          */
         $('form').on('submit', function(e) {

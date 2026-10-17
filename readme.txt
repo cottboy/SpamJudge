@@ -18,6 +18,7 @@ SpamJudge uses AI large language models to automatically detect and filter spam 
 
 * Powered by the built-in WordPress AI Client (WordPress 7.0+), no need to configure API endpoints or keys in the plugin
 * AI provider credentials are managed centrally by WordPress under "Settings → Connectors"
+* Choose a specific AI model, or leave it on the default so WordPress picks one
 * Customizable AI prompts to adjust scoring criteria based on the characteristics of the website
 * Configurable score thresholds for flexible control over filtering intensity
 * Rate limiting by input characters (token bucket): set how many characters may be sent to the AI per time window
@@ -42,6 +43,10 @@ The "Rate limiting" setting controls how many input characters may be sent to th
 * -1 (default): unlimited, every comment is sent to the AI
 * 0: paused, no requests are sent to the AI and all comments are handled as detection failures
 * Positive number: token bucket quota per window; once exhausted, further comments are handled as detection failures until quota refills
+
+= Model selection =
+
+The "AI Model" dropdown on the settings page is filled by asking each configured provider for its models, which happens over the network while the page is already displayed. Models that support text generation are listed; when a specific provider is selected only its models are shown, and when the provider is left on automatic the models are grouped by provider. Choosing the default lets WordPress pick the model. If the fetch fails (no network access, invalid key), the dropdown keeps the default entry and any model ID you had saved.
 
 = Default system prompt in the current version =
 
@@ -105,6 +110,10 @@ The plugin itself is free, but the AI provider you configure in WordPress requir
 
 Go to "Settings → Connectors" in the WordPress admin dashboard and configure at least one AI provider. No provider settings are needed inside the plugin itself.
 
+= Can I choose which model to use? =
+
+Yes. Open the plugin settings page and it lists the models supported by the providers you have configured, from which you can pick one. Leave it on the default and WordPress decides the model for you.
+
 = Where will the comment data be sent? =
 
 Comment data will be sent to the AI provider you configured in WordPress for scoring. Make sure to use a trusted AI provider and review its privacy policy. The plugin itself does not collect or store any data on third-party servers.
@@ -127,7 +136,7 @@ Each comment consumes input characters (system prompt + commenter name + comment
 = 1.2.0（2026-09-19） =
 * Switched to the built-in WordPress AI Client (WordPress 7.0+), no more provider/endpoint/key settings in the plugin
 * AI provider credentials are now managed by WordPress under "Settings → Connectors"
-* New Model ID setting: leave empty to use the provider's default model, or enter a custom model; existing model ID values from older versions carry over automatically
+* New AI model setting: pick from the models each configured provider supports, or leave it on the default for WordPress to decide; existing model ID values from older versions carry over automatically
 * New rate limiting setting: limit how many input characters may be sent to the AI per time window (token bucket, -1 means unlimited, 0 pauses all AI requests)
 
 = 1.1.0（2025-12-03） =
