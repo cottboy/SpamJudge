@@ -136,12 +136,12 @@ function spamjudge_maybe_upgrade() {
     $table_name = $wpdb->prefix . 'spamjudge_logs';
 
     // 检查日志表是否存在以及是否包含 api_status_code 列
-    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.SchemaChange -- 表名固定安全，升级迁移必须直接查询
+    // 表名来自 WordPress 自带前缀加固定后缀，不可占位符化，也不可缓存，检查工具的这三项告警均为误报
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- 升级迁移的一次性表结构操作
     $columns = $wpdb->get_col( "SHOW COLUMNS FROM {$table_name}", 0 );
 
     if ( is_array( $columns ) && in_array( 'api_status_code', $columns, true ) ) {
-        // 列名固定安全，直接执行 ALTER
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.SchemaChange -- 升级迁移，删除已弃用列
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- 升级迁移，删除已弃用列
         $wpdb->query( "ALTER TABLE {$table_name} DROP COLUMN api_status_code" );
     }
 
