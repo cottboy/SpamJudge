@@ -130,7 +130,7 @@ If you output anything other than a single number, the system will fail.',
             return $commentdata;
         }
 
-        // 限流检查（令牌桶，惰性计算）：配额不足或已暂停时不再请求 AI，直接走检测失败分支
+        // 限流检查（令牌桶，惰性计算）：配额不足、已暂停或抢锁超时不再请求 AI，直接走检测失败分支
         $rate_limited = false;
         $rate_limit = SpamJudge_Rate_Limiter::get_limit_chars( $this->settings );
 
