@@ -18,6 +18,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class SpamJudge {
     
     /**
+     * 评论检查结果临时存储的 Transient 键名前缀
+     */
+    const PENDING_TRANSIENT_PREFIX = 'spamjudge_pending_';
+    
+    /**
      * 单例实例
      *
      * @var SpamJudge
@@ -130,6 +135,10 @@ If you output anything other than a single number, the system will fail.',
             return $commentdata;
         }
 
+        // 为本次评论生成唯一编号，评论入库后凭它取回自己的检查结果，避免并发评论互相覆盖
+        $pending_token = wp_generate_uuid4();
+        $commentdata['spamjudge_token'] = $pending_token;
+
         // 限流检查（令牌桶，惰性计算）：配额不足、已暂停或抢锁超时不再请求 AI，直接走检测失败分支
         $rate_limited = false;
         $rate_limit = SpamJudge_Rate_Limiter::get_limit_chars( $this->settings );
@@ -200,7 +209,7 @@ If you output anything other than a single number, the system will fail.',
                 'comment_content' => $comment_content,
                 'ai_score' => $result['score'],
                 'action_taken' => $action,
-            ) );
+            ), $pending_token );
 
         } else {
             // AI 检测失败（超时或其他错误）
@@ -225,7 +234,7 @@ If you output anything other than a single number, the system will fail.',
                 'comment_content' => $comment_content,
                 'ai_score' => null,
                 'action_taken' => $action,
-            ) );
+            ), $pending_token );
         }
 
         // 设置评论状态
@@ -278,8 +287,8 @@ If you output anything other than a single number, the system will fail.',
      * @param array $commentdata 评论数据
      */
     public function mark_spam_after_insert( $comment_id, $comment_approved, $commentdata ) {
-        // 获取待处理的检查结果
-        $check_data = get_transient( 'spamjudge_pending_log' );
+        // 按本条评论的唯一编号获取检查结果
+        $check_data = $this->get_pending_check( $commentdata );
 
         if ( ! $check_data ) {
             return;
@@ -306,33 +315,56 @@ If you output anything other than a single number, the system will fail.',
     /**
      * 记录待处理的检查结果
      *
-     * 由于评论还未插入数据库，我们暂存检查结果，在评论插入后记录
+     * 由于评论还未插入数据库，我们按评论的唯一编号暂存检查结果，在评论插入后记录
      *
-     * @param array $check_data 检查数据
+     * @param array  $check_data 检查数据
+     * @param string $pending_token 本次评论的唯一编号
      */
-    private function log_pending_check( $check_data ) {
-        // 将检查结果存储在临时选项中
-        set_transient( 'spamjudge_pending_log', $check_data, 60 );
+    private function log_pending_check( $check_data, $pending_token ) {
+        // 按编号分开暂存，避免并发评论的检查结果互相覆盖
+        set_transient( self::PENDING_TRANSIENT_PREFIX . $pending_token, $check_data, 60 );
 
         // 挂钩评论插入后的动作
-        add_action( 'comment_post', array( $this, 'log_comment_check' ), 10, 1 );
+        add_action( 'comment_post', array( $this, 'log_comment_check' ), 10, 3 );
+    }
+
+    /**
+     * 按评论携带的唯一编号读取待处理的检查结果
+     *
+     * @param array $commentdata 评论数据
+     * @return array|false 检查结果，编号缺失、格式异常或已过期时返回 false
+     */
+    private function get_pending_check( $commentdata ) {
+        if ( empty( $commentdata['spamjudge_token'] ) || ! is_string( $commentdata['spamjudge_token'] ) ) {
+            return false;
+        }
+
+        $token = $commentdata['spamjudge_token'];
+
+        if ( ! preg_match( '/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $token ) ) {
+            return false;
+        }
+
+        return get_transient( self::PENDING_TRANSIENT_PREFIX . $token );
     }
     
     /**
      * 记录评论检查结果
      *
-     * @param int $comment_id 评论 ID（不使用，仅为兼容WordPress钩子）
+     * @param int   $comment_id 评论 ID（不使用，仅为兼容WordPress钩子）
+     * @param mixed $comment_approved 评论状态（不使用，仅为兼容WordPress钩子）
+     * @param array $commentdata 评论数据
      */
-    public function log_comment_check( $comment_id ) {
-        // 获取待处理的检查结果
-        $check_data = get_transient( 'spamjudge_pending_log' );
+    public function log_comment_check( $comment_id, $comment_approved, $commentdata ) {
+        // 按本条评论的唯一编号获取检查结果
+        $check_data = $this->get_pending_check( $commentdata );
 
         if ( ! $check_data ) {
             return;
         }
 
-        // 删除临时数据
-        delete_transient( 'spamjudge_pending_log' );
+        // 删除本次评论自己的临时数据
+        delete_transient( self::PENDING_TRANSIENT_PREFIX . $commentdata['spamjudge_token'] );
 
         // 记录日志（不记录comment_id）
         $logger = new SpamJudge_Comment_Logger();
