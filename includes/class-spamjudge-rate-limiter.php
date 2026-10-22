@@ -253,6 +253,7 @@ class SpamJudge_Rate_Limiter {
         $lock_name = self::get_lock_name();
 
         // 抢锁最多等 1 秒，超时按限流处理，避免并发扣费互相覆盖
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- 命名锁必须直连数据库实时获取，缓存锁状态会导致并发扣费互相覆盖
         $locked = $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, 1)', $lock_name ) );
 
         if ( '1' !== (string) $locked ) {
@@ -318,6 +319,7 @@ class SpamJudge_Rate_Limiter {
 
             return true;
         } finally {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- 释放命名锁必须直连数据库，锁状态不可缓存
             $wpdb->get_var( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $lock_name ) );
         }
     }
